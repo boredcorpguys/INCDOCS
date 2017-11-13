@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.incdocs</groupId>
 	<artifactId>incdocs-server</artifactId>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>incdocs-server</name>
 	<url>http://maven.apache.org</url>
