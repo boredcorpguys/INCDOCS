@@ -10,14 +10,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @RestController
-@EnableWebMvc
 @EnableAutoConfiguration
 public class DemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@RequestMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(value = "/hello", produces = MediaType.TEXT_HTML_VALUE)
 	public String hello() {
 		return "hello world!";
 	}
