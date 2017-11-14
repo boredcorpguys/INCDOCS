@@ -13,7 +13,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source> <!-- REQUIRED -->
         <maven.compiler.target>${java.version}</maven.compiler.target> <!-- REQUIRED -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <appengine.maven.plugin>1.9.58</appengine.maven.plugin>
+        <appengine.maven.plugin>1.3.2</appengine.maven.plugin>
 	</properties>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
