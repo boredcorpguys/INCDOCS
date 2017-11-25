@@ -1,0 +1,17 @@
+runtime: java
+env: flex
+handlers:
+- url: /indocs-server/.*
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 2
+  cool_down_period_sec: 120 # default value
+  cpu_utilization:
+  target_utilization: 0.5
+resources:
+  cpu: 2
+  memory_gb: 4
+  disk_size_gb: 10
+runtime_config:
+   jdk: openjdk8
+   server: jetty9
