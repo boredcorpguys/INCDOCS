@@ -1,8 +1,15 @@
 runtime: java
+env: flex
+
+runtime_config:  # Optional
+  jdk: openjdk8
 
 handlers:
-- url: /indocs-server/.*
+- url: /.*
   script: this field is required, but ignored
+
+manual_scaling:
+  instances: 1
 
 env_variables:
     CLOUD_STORAGE_BUCKET: staging.incdocs-server.appspot.com
