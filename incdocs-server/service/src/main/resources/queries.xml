@@ -1,0 +1,44 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:map id="queryMap">
+        <entry key="select_user_action_on_entities">
+            <value><![CDATA[
+                    ABC
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_roles">
+            <value><![CDATA[
+                    select * from INCDOCS.ROLES
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_role_by_id">
+            <value><![CDATA[
+                    select * from INCDOCS.ROLES where id=:id
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_actions_for_role">
+            <value><![CDATA[
+                    select r.id, r.name, r.description
+                    from INCDOCS.ROLES r
+                    where r.id=:id
+                    union
+                    select a.id, a.name, a.description
+                    from INCDOCS.ACTIONS a
+                    where a.id in(select action_id from INCDOCS.ROLE_ACTIONS where role_id=:id)
+                ]]>
+            </value>
+        </entry>
+    </util:map>
+
+</beans>
