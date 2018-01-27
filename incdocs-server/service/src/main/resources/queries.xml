@@ -11,9 +11,9 @@
     <util:map id="queryMap">
         <entry key="select_user_action_on_entities">
             <value><![CDATA[
-                    select u.id, u.pan, u.name, o.role_id, o.rg_id
+                    select u.email_id, u.emp_id, u.name, u.role_id, o.rg_id
                     from INCDOCS.USERS u, INCDOCS.USER_OPERATIONS o
-                    where u.id = o.user_id and u.id = :id
+                    where u.email_id = o.user_id and u.email_id = :id
                 ]]>
             </value>
         </entry>

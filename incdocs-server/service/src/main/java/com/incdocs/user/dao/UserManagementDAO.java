@@ -38,25 +38,26 @@ public class UserManagementDAO {
 
     public List<User> getUsers() {
         return jdbcTemplate.query("select * from INCDOCS.USERS",
-                (resultSet, rowCount) -> new User(resultSet.getInt("id"))
+                (resultSet, rowCount) -> new User(resultSet.getString("email_id"))
                         .setName(resultSet.getString("name"))
 
         );
     }
 
-    public UserRoleActionsOnEntity getUserRolesActions(int id) {
+    public UserRoleActionsOnEntity getUserRolesActions(String emailId) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_USER_ACTION_ON_ENTITIES_SQL),
-                        new MapSqlParameterSource("id", id),
+                        new MapSqlParameterSource("id", emailId),
                         (ResultSet resultSet, int rowCount) -> {
-                            User user = new User(resultSet.getInt("id"))
+                            User user = new User(resultSet.getString("email_id"))
                             .setName(resultSet.getString("name"))
-                                    .setPan(resultSet.getString("pan"));
+                                    .setRoleID(resultSet.getInt("role_id"))
+                                    .setEmpID(resultSet.getString("emp_id"));
 
                             UserRoleActionsOnEntity userRoles = new UserRoleActionsOnEntity(user);
                             RoleActions roleActions = entitlementDAO
-                                    .getRoleActions(resultSet.getInt("role_id"));
+                                    .getRoleActions(user.getRoleID());
                             userRoles.setRoleActions(roleActions);
                             ResourceGroup rg = entityDAO.getResourceGroup(resultSet.getInt("rg_id"));
                             rg.getEntities().forEach(entity -> userRoles.add(entity));

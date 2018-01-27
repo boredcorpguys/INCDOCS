@@ -1,25 +1,31 @@
 package model.domain;
 
-public class User {
-    private final int id;
-    private String name;
-    private String pan;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-    public String getPan() {
-        return pan;
+public class User {
+    private String empID;
+    private final String emailID;
+    private String name;
+    private Integer roleID;
+    private String password;
+
+    public User(String emailID) {
+        this.emailID = emailID;
     }
 
-    public User setPan(String pan) {
-        this.pan = pan;
+    @JsonIgnore
+    public String getEmpID() {
+        return empID;
+    }
+
+    public User setEmpID(String empID) {
+        this.empID = empID;
         return this;
     }
 
-    public User(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
+    @JsonIgnore
+    public String getEmailID() {
+        return emailID;
     }
 
     public String getName() {
@@ -31,6 +37,16 @@ public class User {
         return this;
     }
 
+    @JsonIgnore
+    public Integer getRoleID() {
+        return roleID;
+    }
+
+    public User setRoleID(Integer roleID) {
+        this.roleID = roleID;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,12 +54,21 @@ public class User {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
-        return name != null ? name.equals(user.name) : user.name == null;
+        return getEmailID() != null ? getEmailID().equals(user.getEmailID()) : user.getEmailID() == null;
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    public User setPassword(String password) {
+        this.password = password;
+        return this;
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return getEmailID() != null ? getEmailID().hashCode() : 0;
     }
 }

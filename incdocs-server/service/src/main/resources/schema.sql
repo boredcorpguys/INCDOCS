@@ -1,9 +1,18 @@
-create table INCDOCS.USERS
+create table INCDOCS.ROLES
 (
     id integer not null,
-    name varchar(255) not null,
-    pan character(10) not null,
+    name varchar(20) not null,
+    description  varchar(255),
     primary key(id)
+);
+create table INCDOCS.USERS
+(
+    name varchar(255) not null,
+    emp_id varchar(100) not null,
+    email_id varchar(100) not null,
+    role_id integer references ROLES(id),
+    password varchar(20) not null,
+    primary key(email_id)
 );
 create table INCDOCS.ENTITIES
 (
@@ -18,13 +27,7 @@ create table INCDOCS.RESOURCE_GROUP
     entity_id integer references ENTITIES(id),
     primary key(id)
 );
-create table INCDOCS.ROLES
-(
-    id integer not null,
-    name varchar(20) not null,
-    description  varchar(255),
-    primary key(id)
-);
+
 create table INCDOCS.ACTIONS
 (
     id integer not null,
@@ -40,8 +43,7 @@ create table INCDOCS.ROLE_ACTIONS
 );
 create table INCDOCS.USER_OPERATIONS
 (
-    user_id integer references USERS(id),
-    role_id integer references ROLES(id),
+    user_id varchar(100) references USERS(email_id),
     rg_id integer references RESOURCE_GROUP(id),
-    primary key(user_id,role_id,rg_id)
+    primary key(user_id,rg_id)
 );

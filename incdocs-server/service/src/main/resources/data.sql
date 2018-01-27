@@ -1,8 +1,3 @@
-insert into INCDOCS.USERS(id,name,pan) values(1,'Rahul','abcd1234a');
-insert into INCDOCS.USERS(id,name,pan) values(2,'Vishnu','abcd1234b');
-insert into INCDOCS.USERS(id,name,pan) values(3,'Kaustubh','abcd1234c');
-
-
 insert into INCDOCS.ENTITIES(id,name,parent_id) values(1,'RIL',NULL);
 insert into INCDOCS.ENTITIES(id,name,parent_id) values(2,'RCOM',1);
 insert into INCDOCS.ENTITIES(id,name,parent_id) values(3,'REnergy',1);
@@ -26,4 +21,7 @@ insert into INCDOCS.ROLE_ACTIONS(role_id,action_id) values(1,2);
 insert into INCDOCS.ROLE_ACTIONS(role_id,action_id) values(1,3);
 insert into INCDOCS.ROLE_ACTIONS(role_id,action_id) values(1,4);
 
-insert into INCDOCS.USER_OPERATIONS(user_id,role_id,rg_id) values(1,1,1);
+insert into INCDOCS.USERS(name,emp_id,email_id,role_id,password)
+values('boredcorpguy','abcd1234a','boredcorpguys@gmail.com',1,'commideaacc');
+
+insert into INCDOCS.USER_OPERATIONS(user_id,rg_id) values('boredcorpguys@gmail.com',1);

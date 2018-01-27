@@ -20,8 +20,8 @@ public class UserManagementService {
 
     @GetMapping("/actions")
     public @ResponseBody
-    UserRoleActionsOnEntity get(@RequestParam(value="id", required=true) int id) {
-        return userManagementDAO.getUserRolesActions(id);
+    UserRoleActionsOnEntity get(@RequestParam(value="email_id", required=true) String emailId) {
+        return userManagementDAO.getUserRolesActions(emailId);
     }
 
 }
