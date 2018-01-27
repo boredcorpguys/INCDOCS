@@ -1,23 +1,29 @@
 package model.domain;
 
-public class User
-{
-    private int id;
+public class User {
+    private final int id;
     private String name;
+    private String pan;
+
+    public String getPan() {
+        return pan;
+    }
+
+    public User setPan(String pan) {
+        this.pan = pan;
+        return this;
+    }
+
+    public User(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
     }
 
-
-
     public String getName() {
         return name;
-    }
-
-    public User setId(int id) {
-        this.id = id;
-        return this;
     }
 
     public User setName(String name) {

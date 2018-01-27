@@ -3,27 +3,26 @@ package model.response;
 import model.domain.Action;
 import model.domain.Role;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RoleActions {
-    private Map<Role,List<Action>> rolesByAction = new HashMap<>();
+   private Role role;
+   private List<Action> actions = new ArrayList<>();
 
-    public void addActionForRole(Role role, Action action) {
-        if(role==null)
-            throw new IllegalArgumentException("role cant be null");
-
-        List<Action> actions = rolesByAction.get(role);
-        if(actions==null) {
-            actions = new ArrayList<Action>();
-            rolesByAction.put(role,actions);
-        }
-        actions.add(action);
+    public Role getRole() {
+        return role;
     }
 
-    public Map<Role, List<Action>> getRolesByAction() {
-        return rolesByAction;
+    public RoleActions setRole(Role role) {
+        this.role = role;
+        return this;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void addAction(Action action) {
+        Optional.ofNullable(action).ifPresent(a -> actions.add(a));
     }
 }

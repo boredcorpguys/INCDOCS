@@ -7,13 +7,15 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 @Component("queryManager")
-public class QueryManager implements InitializingBean{
+public class QueryManager implements InitializingBean {
     enum Sql {
         SEL_USER_ACTION_ON_ENTITIES_SQL("select_user_action_on_entities"),
         SEL_ROLES("select_roles"),
         SEL_ROLE_BY_ID("select_role_by_id"),
         SEL_ACTIONS_FOR_ROLE("select_actions_for_role"),
-        ;
+        SEL_ENTITY("select_entity"),
+        SEL_ENTITIES_BY_PARENT("select_entities_by_parent"),
+        SEL_RESOURCE_GROUP("select_resource_group");
         private String key;
 
         Sql(String key) {
@@ -25,8 +27,8 @@ public class QueryManager implements InitializingBean{
         }
     }
 
-    @Resource(name="queryMap")
-    private Map<String,String> queryMap;
+    @Resource(name = "queryMap")
+    private Map<String, String> queryMap;
 
     public String getSQL(QueryManager.Sql sql) {
         return queryMap.get(sql.getKey());

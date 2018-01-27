@@ -1,9 +1,9 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
-<beans xmlns = "http://www.springframework.org/schema/beans"
-       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
@@ -11,7 +11,9 @@
     <util:map id="queryMap">
         <entry key="select_user_action_on_entities">
             <value><![CDATA[
-                    ABC
+                    select u.id, u.pan, u.name, o.role_id, o.rg_id
+                    from INCDOCS.USERS u, INCDOCS.USER_OPERATIONS o
+                    where u.id = o.user_id and u.id = :id
                 ]]>
             </value>
         </entry>
@@ -36,6 +38,33 @@
                     select a.id, a.name, a.description
                     from INCDOCS.ACTIONS a
                     where a.id in(select action_id from INCDOCS.ROLE_ACTIONS where role_id=:id)
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_entity">
+            <value>
+                <![CDATA[
+                    select e.id, e.name, e.parent_id
+                    from INCDOCS.ENTITIES e
+                    where e.id = :id
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_entities_by_parent">
+            <value>
+                <![CDATA[
+                    select e.id, e.name, e.parent_id
+                    from INCDOCS.ENTITIES e
+                    where e.parent_id = :id
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_resource_group">
+            <value>
+                <![CDATA[
+                    select id,entity_id
+                    from INCDOCS.RESOURCE_GROUP
+                    where id = :id
                 ]]>
             </value>
         </entry>

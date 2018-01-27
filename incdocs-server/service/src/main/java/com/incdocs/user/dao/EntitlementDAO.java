@@ -6,13 +6,12 @@ import model.response.RoleActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import static com.incdocs.user.dao.QueryManager.Sql.SEL_ACTIONS_FOR_ROLE;
+import static com.incdocs.user.dao.QueryManager.Sql.SEL_ROLE_BY_ID;
 
 @Repository("entitlementDAO")
 public class EntitlementDAO {
@@ -28,45 +27,34 @@ public class EntitlementDAO {
 
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
-                queryManager.getSQL(QueryManager.Sql.SEL_ROLE_BY_ID),
-                new MapSqlParameterSource("id",roleID),
-                new RowMapper<Role>() {
-                    @Override
-                    public Role mapRow(ResultSet rs, int i) throws SQLException {
-                        return new Role()
-                                .setRoleID(rs.getInt("id"))
-                                .setRoleName(rs.getString("name"))
-                                .setDescription(rs.getString("description"));
-                    }
-                });
+                        queryManager.getSQL(SEL_ROLE_BY_ID),
+                        new MapSqlParameterSource("id", roleID),
+                        (resultSet, rowCount) -> new Role(resultSet.getInt("id"))
+                                .setRoleName(resultSet.getString("name"))
+                                .setDescription(resultSet.getString("description"))
+                );
     }
 
     public RoleActions getRoleActions(int roleID) {
 
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
-                        queryManager.getSQL(QueryManager.Sql.SEL_ACTIONS_FOR_ROLE),
+                        queryManager.getSQL(SEL_ACTIONS_FOR_ROLE),
                         new MapSqlParameterSource("id", roleID),
-                        new RowMapper<RoleActions>() {
-                            @Override
-                            public RoleActions mapRow(ResultSet rs, int i) throws SQLException {
-                                if(rs.next()){
-                                    Role role = new Role().setRoleID(rs.getInt("id"))
-                                            .setRoleName(rs.getString("name"))
-                                            .setDescription(rs.getString("description"));
-                                    RoleActions ra = new RoleActions();
-                                    while(rs.next()) {
-                                        Action a = new Action()
-                                                .setActionID(rs.getInt("id"))
-                                                .setActionName(rs.getString("name"))
-                                                .setDescription(rs.getString("description"));
-                                        ra.addActionForRole(role,a);
-                                    }
-                                    return ra;
-                                }
-                                return null;
+                        (resultSet, rowCount) -> {
+
+                            Role role = new Role(resultSet.getInt("id"))
+                                    .setRoleName(resultSet.getString("name"))
+                                    .setDescription(resultSet.getString("description"));
+                            RoleActions ra = new RoleActions();
+                            ra.setRole(role);
+                            while (resultSet.next()) {
+                                Action a = new Action(resultSet.getInt("id"))
+                                        .setActionName(resultSet.getString("name"))
+                                        .setDescription(resultSet.getString("description"));
+                                ra.addAction(a);
                             }
-                        }
-                );
+                            return ra;
+                        });
     }
 }

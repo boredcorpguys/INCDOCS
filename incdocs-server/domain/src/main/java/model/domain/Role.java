@@ -3,23 +3,24 @@ package model.domain;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Role {
-    private int roleID;
+    private final int roleID;
     private String roleName;
     private String description;
+
+    public Role(int roleID) {
+        this.roleID = roleID;
+    }
 
     public int getRoleID() {
         return roleID;
     }
+
     public String getRoleName() {
         return roleName;
     }
+
     public String getDescription() {
         return description;
-    }
-
-    public Role setRoleID(int roleID) {
-        this.roleID = roleID;
-        return this;
     }
 
     public Role setRoleName(String roleName) {

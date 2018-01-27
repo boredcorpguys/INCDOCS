@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/entitlement")
-public class EntitlementInfoService {
+@RequestMapping("/incdocs/entitlement")
+public class EntitlementManagementService {
 
     @Autowired
     @Qualifier("entitlementDAO")

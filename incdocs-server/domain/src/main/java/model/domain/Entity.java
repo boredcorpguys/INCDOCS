@@ -2,26 +2,36 @@ package model.domain;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Entity {
-    private int entityID;
-    private int parentID;
+    private final int entityID;
+
     private String name;
+
+    private Integer parentID;
+
+    private List<Entity> childEntities = new ArrayList<>();
+
+    public Entity(int entityID) {
+        this.entityID = entityID;
+    }
 
     public int getEntityID() {
         return entityID;
-    }
-
-    public int getParentID() {
-        return parentID;
     }
 
     public String getName() {
         return name;
     }
 
-    public Entity setEntityID(int entityID) {
-        this.entityID = entityID;
-        return this;
+    public List<Entity> getChildEntities() {
+        return childEntities;
+    }
+
+    public Integer getParentID() {
+        return parentID;
     }
 
     public Entity setParentID(int parentID) {
@@ -31,6 +41,11 @@ public class Entity {
 
     public Entity setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public Entity addChildEntity(Entity childEntity) {
+        this.childEntities.add(childEntity);
         return this;
     }
 

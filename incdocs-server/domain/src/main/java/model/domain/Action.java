@@ -3,9 +3,13 @@ package model.domain;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Action {
-    private int actionID;
+    private final int actionID;
     private String actionName;
     private String description;
+
+    public Action(int actionID) {
+        this.actionID = actionID;
+    }
 
     public String getDescription() {
         return description;
@@ -18,11 +22,6 @@ public class Action {
 
     public int getActionID() {
         return actionID;
-    }
-
-    public Action setActionID(int actionID) {
-        this.actionID = actionID;
-        return this;
     }
 
     public String getActionName() {
