@@ -10,7 +10,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.incdocs.user.dao.QueryManager.Sql.SEL_ACTIONS_FOR_ROLE;
+import static com.incdocs.user.dao.QueryManager.Sql.SEL_ROLES;
 import static com.incdocs.user.dao.QueryManager.Sql.SEL_ROLE_BY_ID;
 
 @Repository("entitlementDAO")
@@ -56,5 +59,16 @@ public class EntitlementDAO {
                             }
                             return ra;
                         });
+    }
+
+    public List<Role> getRoles() {
+        return jdbcTemplate.query(
+                queryManager.getSQL(SEL_ROLES),
+                (resultSet, rowCount) ->
+                        new Role(resultSet.getInt("id"))
+                                .setRoleName(resultSet.getString("name"))
+                                .setDescription(resultSet.getString("description"))
+
+        );
     }
 }

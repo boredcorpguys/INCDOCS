@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/incdocs/entitlement")
 public class EntitlementManagementService {
@@ -25,5 +27,11 @@ public class EntitlementManagementService {
     public @ResponseBody
     RoleActions getRoleActions(@RequestParam(value="id", required=true) int id) {
         return entitlementDAO.getRoleActions(id);
+    }
+
+    @GetMapping("/roles")
+    public @ResponseBody
+    List<Role> getRoles() {
+        return entitlementDAO.getRoles();
     }
 }
