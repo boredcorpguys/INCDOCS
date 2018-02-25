@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>INCDOCS</groupId>
+	<groupId>com.incdocs</groupId>
 	<artifactId>incdocs-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<modules>
 		<module>service</module>
-        <module>domain</module>
+        <module>data</module>
     </modules>
 	<packaging>pom</packaging>
 

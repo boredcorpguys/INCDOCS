@@ -1,7 +1,8 @@
-package com.incdocs.user.dao;
+package com.incdocs.entity.dao;
 
-import model.domain.Entity;
-import model.domain.Role;
+import com.incdocs.utils.QueryManager;
+import com.indocs.model.domain.Entity;
+import com.indocs.model.domain.Role;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.incdocs.user.dao.QueryManager.Sql.*;
+import static com.incdocs.utils.QueryManager.Sql.*;
 
 @Repository("entityDAO")
 public class EntityDAO {
@@ -32,7 +33,8 @@ public class EntityDAO {
 
                             Entity parent = new Entity(resultSet.getString("id"))
                                     .setName(resultSet.getString("name"))
-                                    .setParentID(resultSet.getString("parent_id"));
+                                    .setParentID(resultSet.getString("parent_id"))
+                                    .setGroupHeadID(resultSet.getString("gh_id"));
 
                             if (parent.getParentID() == null) {
                                 getChildEntities(parent.getEntityID())
@@ -50,6 +52,7 @@ public class EntityDAO {
                         (resultSet, rowCount) -> new Entity(resultSet.getString("id"))
                                 .setName(resultSet.getString("name"))
                                 .setParentID(resultSet.getString("parent_id"))
+                                .setGroupHeadID(resultSet.getString("gh_id"))
                 );
     }
 
@@ -61,6 +64,7 @@ public class EntityDAO {
                         (resultSet, rowCount) -> new Entity(resultSet.getString("id"))
                                 .setName(resultSet.getString("name"))
                                 .setParentID(resultSet.getString("parent_id"))
+                                .setGroupHeadID(resultSet.getString("gh_id"))
                 );
     }
 

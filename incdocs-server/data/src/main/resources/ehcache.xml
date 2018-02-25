@@ -14,7 +14,6 @@
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
     </cache>
-
     <cache name="entityCache"
            maxElementsInMemory="100"
            eternal="false"
@@ -24,7 +23,6 @@
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
     </cache>
-
     <cache name="entityRoleCache"
            maxElementsInMemory="100"
            eternal="false"

@@ -1,8 +1,8 @@
-package com.incdocs.user.services;
+package com.incdocs.entitlement.services;
 
-import com.incdocs.user.dao.EntitlementDAO;
-import model.domain.Role;
-import model.response.RoleActions;
+import com.incdocs.entitlement.dao.EntitlementDAO;
+import com.indocs.model.domain.Role;
+import com.indocs.model.response.RoleActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;

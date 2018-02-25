@@ -1,6 +1,7 @@
-package model.domain;
+package com.indocs.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.indocs.model.constants.ApplicationConstants;
 
 public class User {
     private final String incdocsID;
@@ -12,7 +13,8 @@ public class User {
     private String password;
     private String companyID;
     private String contactNumber;
-
+    private boolean isClient;
+    private ApplicationConstants.UserStatus status;
 
     public User(String incdocsID) {
         this.incdocsID = incdocsID;
@@ -109,5 +111,23 @@ public class User {
     @Override
     public int hashCode() {
         return getIncdocsID().hashCode();
+    }
+
+    public boolean isClient() {
+        return isClient;
+    }
+
+    public User setClient(boolean client) {
+        isClient = client;
+        return this;
+    }
+
+    public ApplicationConstants.UserStatus getStatus() {
+        return status;
+    }
+
+    public User setStatus(ApplicationConstants.UserStatus status) {
+        this.status = status;
+        return this;
     }
 }

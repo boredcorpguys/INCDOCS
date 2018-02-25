@@ -1,8 +1,9 @@
-package com.incdocs.user.dao;
+package com.incdocs.entitlement.dao;
 
-import model.domain.Action;
-import model.domain.Role;
-import model.response.RoleActions;
+import com.incdocs.utils.QueryManager;
+import com.indocs.model.domain.Action;
+import com.indocs.model.domain.Role;
+import com.indocs.model.response.RoleActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.incdocs.user.dao.QueryManager.Sql.SEL_ACTIONS_FOR_ROLE;
-import static com.incdocs.user.dao.QueryManager.Sql.SEL_ROLES;
-import static com.incdocs.user.dao.QueryManager.Sql.SEL_ROLE_BY_ID;
+import static com.incdocs.utils.QueryManager.Sql.SEL_ACTIONS_FOR_ROLE;
+import static com.incdocs.utils.QueryManager.Sql.SEL_ROLES;
+import static com.incdocs.utils.QueryManager.Sql.SEL_ROLE_BY_ID;
 
 @Repository("entitlementDAO")
 public class EntitlementDAO {

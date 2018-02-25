@@ -1,4 +1,4 @@
-package model.domain;
+package com.indocs.model.domain;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -13,6 +13,8 @@ public class Entity {
     private String parentID;
 
     private List<Entity> childEntities = new ArrayList<>();
+
+    private String groupHeadID;
 
     public Entity(String entityID) {
         this.entityID = entityID;
@@ -46,6 +48,15 @@ public class Entity {
 
     public Entity addChildEntity(Entity childEntity) {
         this.childEntities.add(childEntity);
+        return this;
+    }
+
+    public String getGroupHeadID() {
+        return groupHeadID;
+    }
+
+    public Entity setGroupHeadID(String groupHeadID) {
+        this.groupHeadID = groupHeadID;
         return this;
     }
 

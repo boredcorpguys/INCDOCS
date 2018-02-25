@@ -1,8 +1,14 @@
 package com.incdocs.user.dao;
 
-import model.domain.User;
-import model.request.InputUser;
-import model.response.UserEntity;
+import com.incdocs.entitlement.dao.EntitlementDAO;
+import com.incdocs.entity.dao.EntityDAO;
+import com.incdocs.utils.QueryManager;
+import com.incdocs.utils.Utils;
+import com.indocs.model.constants.ApplicationConstants;
+import com.indocs.model.domain.User;
+import com.indocs.model.request.UserCreateRequest;
+import com.indocs.model.request.UserProfileRequest;
+import com.indocs.model.response.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,9 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.util.List;
 
-import static com.incdocs.user.dao.QueryManager.Sql.SEL_USER;
-import static com.incdocs.user.dao.QueryManager.Sql.SEL_USER_ENTITLEMENTS;
-import static com.incdocs.user.dao.QueryManager.Sql.UPD_USER;
+import static com.incdocs.utils.QueryManager.Sql.*;
 
 @Repository("userManagementDAO")
 public class UserDAO {
@@ -36,29 +40,26 @@ public class UserDAO {
     @Qualifier("entityDAO")
     private EntityDAO entityDAO;
 
-    public List<User> getUsers() {
-        return jdbcTemplate.query("select * from INCDOCS.USERS",
-                (resultSet, rowCount) -> new User(resultSet.getString("email_id"))
-                        .setName(resultSet.getString("name"))
-
-        );
-    }
-
-    public UserEntity getUserRolesActions(String incdocsID) {
+   public UserEntity getUserRolesActions(String id) {
+        System.out.println("getUserRolesActions");
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_USER_ENTITLEMENTS),
-                        new MapSqlParameterSource("id", incdocsID),
+                        new MapSqlParameterSource("id", id),
                         (ResultSet resultSet, int rowCount) -> {
                             User user = new User(resultSet.getString("incdocs_id"))
                                     .setName(resultSet.getString("name"))
                                     .setRoleID(resultSet.getInt("role_id"))
                                     .setEmpID(resultSet.getString("emp_id"))
                                     .setCompanyID(resultSet.getString("company_id"))
-                                    .setEmailID(resultSet.getString("email_id"));
+                                    .setEmailID(resultSet.getString("email_id"))
+                                    .setClient(resultSet.getBoolean("is_client"))
+                                    .setStatus(
+                                            ApplicationConstants.UserStatus.fromStatus(
+                                                    resultSet.getString("status")));
 
                             UserEntity userRoles =
-                                    new UserEntity(user, resultSet.getString("company_id"));
+                                    new UserEntity(user).addEntity(resultSet.getString("company_id"));
                             return userRoles;
                         }
                 );
@@ -76,18 +77,38 @@ public class UserDAO {
                                     .setEmpID(resultSet.getString("emp_id"))
                                     .setCompanyID(resultSet.getString("company_id"))
                                     .setEmailID(resultSet.getString("email_id"))
-                                    .setContactNumber(resultSet.getString("contact_number"));
+                                    .setContactNumber(resultSet.getString("contact_number"))
+                                    .setClient(resultSet.getBoolean("is_client"))
+                                    .setStatus(
+                                            ApplicationConstants.UserStatus.fromStatus(
+                                                    resultSet.getString("status")));
                             return user;
                         }
                 );
     }
 
-    public int modifyUserDetails(InputUser user) {
+    public int modifyUserDetails(UserProfileRequest user) {
         SqlParameterSource params = new MapSqlParameterSource("id", user.getId())
                 .addValue("pwd", user.getPassword())
                 .addValue("email", user.getEmailID())
                 .addValue("contact", user.getContactNumber());
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .update(queryManager.getSQL(UPD_USER), params);
+    }
+
+    public String createUser(UserCreateRequest userCreateRequest) {
+        String incdocsID = Utils.idGenerator(userCreateRequest.getCompanyID(), userCreateRequest.getId());
+        jdbcTemplate.update(queryManager.getSQL(INSERT_USER),
+                new Object[]{
+                    userCreateRequest.getName(),
+                    incdocsID,
+                    userCreateRequest.getId(),
+                    userCreateRequest.getRole(),
+                    userCreateRequest.getCompanyID(),
+                    userCreateRequest.isClient(),
+                    "N",
+                    userCreateRequest.getGhID()
+                });
+        return incdocsID;
     }
 }

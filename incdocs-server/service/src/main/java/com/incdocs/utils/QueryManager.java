@@ -1,4 +1,4 @@
-package com.incdocs.user.dao;
+package com.incdocs.utils;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Component("queryManager")
 public class QueryManager implements InitializingBean {
-    enum Sql {
+    public enum Sql {
         SEL_USER_ENTITLEMENTS("select_user_entitlement"),
         SEL_USER("select_user"),
         UPD_USER("modify_user"),
@@ -19,7 +19,9 @@ public class QueryManager implements InitializingBean {
         SEL_ENTITIES_BY_PARENT("select_entities_by_parent"),
         SEL_RESOURCE_GROUP("select_resource_group"),
         SEL_ENTITY_ROLES("select_entities_roles"),
-        SEL_ENTITIES_BY_NAME("select_entities_by_name");
+        SEL_ENTITIES_BY_NAME("select_entities_by_name"),
+        INSERT_USER("insert_user");
+
         private String key;
 
         Sql(String key) {

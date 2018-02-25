@@ -1,7 +1,7 @@
-package model.response;
+package com.indocs.model.response;
 
-import model.domain.Action;
-import model.domain.Role;
+import com.indocs.model.domain.Action;
+import com.indocs.model.domain.Role;
 
 import java.util.*;
 

@@ -11,7 +11,7 @@
     <util:map id="queryMap">
         <entry key="select_user_entitlement">
             <value><![CDATA[
-                    SELECT "NAME", "INCDOCS_ID", "EMP_ID", "MANAGER_ID", "ROLE_ID", "EMAIL_ID", "COMPANY_ID", "ENTITY_ID"
+                    SELECT "NAME", "INCDOCS_ID", "EMP_ID", "MANAGER_ID", "ROLE_ID", "EMAIL_ID", "COMPANY_ID", "ENTITY_ID", "IS_CLIENT", "STATUS"
                     FROM "INCDOCS"."USERS" u
                     inner join "INCDOCS"."USER_ENTITLEMENTS" e
                     on u."INCDOCS_ID" = e."USER_ID"
@@ -62,28 +62,64 @@
         <entry key="select_entity">
             <value>
                 <![CDATA[
-                    select e."ID", e."NAME", e."PARENT_ID"
-                    from "INCDOCS"."ENTITIES" e
-                    where cast(e."ID" as varchar) = :id
+                    with entities as (
+                        select e."ID", e."NAME", e."PARENT_ID"
+                                        from "INCDOCS"."ENTITIES" e
+                                        where "ID" = :id
+                    ), group_head as (
+                        select ue."USER_ID" as GH_ID, ue."ENTITY_ID"
+                        from "INCDOCS"."USER_ENTITLEMENTS" ue
+                        inner join "INCDOCS"."USERS" u on ue."USER_ID" = u."INCDOCS_ID"
+                        inner join "INCDOCS"."ROLES" r on u."ROLE_ID" = r."ID"
+                        where ue."ENTITY_ID" in(select "ID" from entities) and r."NAME"='GROUP_HEAD'
+                    )
+                    select e.*,h.GH_ID
+                    from entities e
+                    left join group_head h
+                    on e."ID" = h."ENTITY_ID"
                 ]]>
             </value>
         </entry>
         <entry key="select_entities_by_parent">
             <value>
                 <![CDATA[
-                    select e."ID", e."NAME", e."PARENT_ID"
-                    from "INCDOCS"."ENTITIES" e
-                    where cast(e."PARENT_ID" as varchar) = :id
+                    with entities as (
+                        select e."ID", e."NAME", e."PARENT_ID"
+                                        from "INCDOCS"."ENTITIES" e
+                                        where "PARENT_ID" = :id
+                    ), group_head as (
+                        select ue."USER_ID" as GH_ID, ue."ENTITY_ID"
+                        from "INCDOCS"."USER_ENTITLEMENTS" ue
+                        inner join "INCDOCS"."USERS" u on ue."USER_ID" = u."INCDOCS_ID"
+                        inner join "INCDOCS"."ROLES" r on u."ROLE_ID" = r."ID"
+                        where ue."ENTITY_ID" in(select "ID" from entities) and r."NAME"='GROUP_HEAD'
+                    )
+                    select e.*,h.GH_ID
+                    from entities e
+                    left join group_head h
+                    on e."ID" = h."ENTITY_ID"
                 ]]>
             </value>
         </entry>
         <entry key="select_entities_by_name">
             <value>
                 <![CDATA[
-                    select e."ID", e."NAME", e."PARENT_ID"
-                    from "INCDOCS"."ENTITIES" e
-                    where e."NAME" like :name
-                ]]>
+
+                ]]>with entities as (
+                select e."ID", e."NAME", e."PARENT_ID"
+                from "INCDOCS"."ENTITIES" e
+                where e."NAME" like :name
+                ), group_head as (
+                select ue."USER_ID" as GH_ID, ue."ENTITY_ID"
+                from "INCDOCS"."USER_ENTITLEMENTS" ue
+                inner join "INCDOCS"."USERS" u on ue."USER_ID" = u."INCDOCS_ID"
+                inner join "INCDOCS"."ROLES" r on u."ROLE_ID" = r."ID"
+                where ue."ENTITY_ID" in(select "ID" from entities) and r."NAME"='GROUP_HEAD'
+                )
+                select e.*,h.GH_ID
+                from entities e
+                left join group_head h
+                on e."ID" = h."ENTITY_ID"
             </value>
         </entry>
         <entry key="select_entities_roles">
@@ -94,6 +130,27 @@
                     where e."ID" in(select "ROLE_ID"
                     from "INCDOCS"."ENTITY_ROLES"
                     where cast("ENTITY_ID" as varchar) = :id)
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_gh_for_entities">
+            <value>
+                <![CDATA[
+                    select *
+                    from "INCDOCS"."ROLES" e
+                    where e."ID" in(select "ROLE_ID"
+                    from "INCDOCS"."ENTITY_ROLES"
+                    where cast("ENTITY_ID" as varchar) = :id)
+                ]]>
+            </value>
+        </entry>
+        <entry key="insert_user">
+            <value>
+                <![CDATA[
+                    INSERT INTO
+                    "INCDOCS"."USERS"(
+                    "NAME", "INCDOCS_ID", "EMP_ID", "ROLE_ID", "COMPANY_ID", "IS_CLIENT", "STATUS", "MANAGER_ID")
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
                 ]]>
             </value>
         </entry>
