@@ -1,0 +1,26 @@
+1. Entitlements:
+    a. Get all roles:
+        GET: /incdocs/entitlement/roles
+        RESULT:
+            [
+                {
+                    "roleID": 1,
+                    "roleName": "ADMIN",
+                    "description": "Administrator"
+                },
+                {
+                    "roleID": 2,
+                    "roleName": "GROUP_HEAD",
+                    "description": "Group Head managing the portfolio"
+                }..
+            ]
+
+    b. Get role by id:
+        GET: /incdocs/entitlement/role?id=1
+        RESULT:
+                    {
+                        "roleID": 1,
+                        "roleName": "ADMIN",
+                        "description": "Administrator"
+                    }
+    c.

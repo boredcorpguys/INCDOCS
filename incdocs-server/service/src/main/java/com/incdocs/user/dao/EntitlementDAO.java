@@ -45,16 +45,18 @@ public class EntitlementDAO {
                         queryManager.getSQL(SEL_ACTIONS_FOR_ROLE),
                         new MapSqlParameterSource("id", roleID),
                         (resultSet, rowCount) -> {
-
-                            Role role = new Role(resultSet.getInt("id"))
-                                    .setRoleName(resultSet.getString("name"))
-                                    .setDescription(resultSet.getString("description"));
+                            Role role = null;
                             RoleActions ra = new RoleActions();
-                            ra.setRole(role);
                             while (resultSet.next()) {
-                                Action a = new Action(resultSet.getInt("id"))
-                                        .setActionName(resultSet.getString("name"))
-                                        .setDescription(resultSet.getString("description"));
+                                if (role == null) {
+                                    role = new Role(resultSet.getInt("role_id"))
+                                            .setRoleName(resultSet.getString("role_name"))
+                                            .setDescription(resultSet.getString("role_desc"));
+                                    ra.setRole(role);
+                                }
+                                Action a = new Action(resultSet.getInt("action_id"))
+                                        .setActionName(resultSet.getString("action_name"))
+                                        .setDescription(resultSet.getString("action_desc"));
                                 ra.addAction(a);
                             }
                             return ra;

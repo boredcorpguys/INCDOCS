@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Entity {
-    private final int entityID;
+    private final String entityID;
 
     private String name;
 
-    private Integer parentID;
+    private String parentID;
 
     private List<Entity> childEntities = new ArrayList<>();
 
-    public Entity(int entityID) {
+    public Entity(String entityID) {
         this.entityID = entityID;
     }
 
-    public int getEntityID() {
+    public String getEntityID() {
         return entityID;
     }
 
@@ -30,11 +30,11 @@ public class Entity {
         return childEntities;
     }
 
-    public Integer getParentID() {
+    public String getParentID() {
         return parentID;
     }
 
-    public Entity setParentID(int parentID) {
+    public Entity setParentID(String parentID) {
         this.parentID = parentID;
         return this;
     }

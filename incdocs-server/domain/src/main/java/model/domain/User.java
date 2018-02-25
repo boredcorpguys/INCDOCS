@@ -3,17 +3,25 @@ package model.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class User {
+    private final String incdocsID;
     private String empID;
-    private final String emailID;
+    private String managerID;
+    private String emailID;
     private String name;
     private Integer roleID;
     private String password;
+    private String companyID;
+    private String contactNumber;
 
-    public User(String emailID) {
-        this.emailID = emailID;
+
+    public User(String incdocsID) {
+        this.incdocsID = incdocsID;
     }
 
-    @JsonIgnore
+    public String getIncdocsID() {
+        return incdocsID;
+    }
+
     public String getEmpID() {
         return empID;
     }
@@ -23,9 +31,22 @@ public class User {
         return this;
     }
 
-    @JsonIgnore
+    public String getManagerID() {
+        return managerID;
+    }
+
+    public User setManagerID(String managerID) {
+        this.managerID = managerID;
+        return this;
+    }
+
     public String getEmailID() {
         return emailID;
+    }
+
+    public User setEmailID(String emailID) {
+        this.emailID = emailID;
+        return this;
     }
 
     public String getName() {
@@ -37,7 +58,6 @@ public class User {
         return this;
     }
 
-    @JsonIgnore
     public Integer getRoleID() {
         return roleID;
     }
@@ -45,16 +65,6 @@ public class User {
     public User setRoleID(Integer roleID) {
         this.roleID = roleID;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-
-        User user = (User) o;
-
-        return getEmailID() != null ? getEmailID().equals(user.getEmailID()) : user.getEmailID() == null;
     }
 
     @JsonIgnore
@@ -67,8 +77,37 @@ public class User {
         return this;
     }
 
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public User setCompanyID(String companyID) {
+        this.companyID = companyID;
+        return this;
+    }
+
+    @JsonIgnore
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public User setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return getIncdocsID().equals(user.getIncdocsID());
+    }
+
     @Override
     public int hashCode() {
-        return getEmailID() != null ? getEmailID().hashCode() : 0;
+        return getIncdocsID().hashCode();
     }
 }

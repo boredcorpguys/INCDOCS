@@ -9,62 +9,91 @@
        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
     <util:map id="queryMap">
-        <entry key="select_user_action_on_entities">
+        <entry key="select_user_entitlement">
             <value><![CDATA[
-                    select u.email_id, u.emp_id, u.name, u.role_id, o.rg_id
-                    from INCDOCS.USERS u, INCDOCS.USER_OPERATIONS o
-                    where u.email_id = o.user_id and u.email_id = :id
+                    SELECT "NAME", "INCDOCS_ID", "EMP_ID", "MANAGER_ID", "ROLE_ID", "EMAIL_ID", "COMPANY_ID", "ENTITY_ID"
+                    FROM "INCDOCS"."USERS" u
+                    inner join "INCDOCS"."USER_ENTITLEMENTS" e
+                    on u."INCDOCS_ID" = e."USER_ID"
+                    where cast(u."INCDOCS_ID" as varchar)=:id
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_user">
+            <value><![CDATA[
+                    SELECT *
+                    FROM "INCDOCS"."USERS" u
+                    where cast(u."INCDOCS_ID" as varchar)=:id
+                ]]>
+            </value>
+        </entry>
+        <entry key="modify_user">
+            <value><![CDATA[
+                    UPDATE "INCDOCS"."USERS"
+                    SET "PASSWORD"=:pwd, "EMAIL_ID"=:email, "CONTACT_NUMBER"=:contact
+                    WHERE cast("INCDOCS_ID" as varchar)=:id
                 ]]>
             </value>
         </entry>
         <entry key="select_roles">
             <value><![CDATA[
-                    select * from INCDOCS.ROLES
+                    SELECT * FROM "INCDOCS"."ROLES"
+                    ORDER BY "ID" ASC
                 ]]>
             </value>
         </entry>
         <entry key="select_role_by_id">
             <value><![CDATA[
-                    select * from INCDOCS.ROLES where id=:id
+                    select * from "INCDOCS"."ROLES" where "ID"=:id
                 ]]>
             </value>
         </entry>
         <entry key="select_actions_for_role">
             <value><![CDATA[
-                    select r.id, r.name, r.description
-                    from INCDOCS.ROLES r
-                    where r.id=:id
-                    union
-                    select a.id, a.name, a.description
-                    from INCDOCS.ACTIONS a
-                    where a.id in(select action_id from INCDOCS.ROLE_ACTIONS where role_id=:id)
+                    select r."ID" as ROLE_ID, r."NAME" as ROLE_NAME, r."DESCRIPTION" as ROLE_DESC,
+                        a."ID" as ACTION_ID, a."NAME" as ACTION_NAME, a."DESCRIPTION" as ACTION_DESC
+                    from "INCDOCS"."ROLE_ACTIONS" ra
+                    inner join "INCDOCS"."ROLES" r on ra."ROLE_ID"=r."ID"
+                    inner join "INCDOCS"."ACTIONS" a on ra."ACTION_ID"=a."ID"
+                    where ra."ROLE_ID"=:id
                 ]]>
             </value>
         </entry>
         <entry key="select_entity">
             <value>
                 <![CDATA[
-                    select e.id, e.name, e.parent_id
-                    from INCDOCS.ENTITIES e
-                    where e.id = :id
+                    select e."ID", e."NAME", e."PARENT_ID"
+                    from "INCDOCS"."ENTITIES" e
+                    where cast(e."ID" as varchar) = :id
                 ]]>
             </value>
         </entry>
         <entry key="select_entities_by_parent">
             <value>
                 <![CDATA[
-                    select e.id, e.name, e.parent_id
-                    from INCDOCS.ENTITIES e
-                    where e.parent_id = :id
+                    select e."ID", e."NAME", e."PARENT_ID"
+                    from "INCDOCS"."ENTITIES" e
+                    where cast(e."PARENT_ID" as varchar) = :id
                 ]]>
             </value>
         </entry>
-        <entry key="select_resource_group">
+        <entry key="select_entities_by_name">
             <value>
                 <![CDATA[
-                    select id,entity_id
-                    from INCDOCS.RESOURCE_GROUP
-                    where id = :id
+                    select e."ID", e."NAME", e."PARENT_ID"
+                    from "INCDOCS"."ENTITIES" e
+                    where e."NAME" like :name
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_entities_roles">
+            <value>
+                <![CDATA[
+                    select *
+                    from "INCDOCS"."ROLES" e
+                    where e."ID" in(select "ROLE_ID"
+                    from "INCDOCS"."ENTITY_ROLES"
+                    where cast("ENTITY_ID" as varchar) = :id)
                 ]]>
             </value>
         </entry>
