@@ -7,6 +7,7 @@ import com.incdocs.user.dao.UserDAO;
 import com.incdocs.user.validator.UserValidator;
 import com.incdocs.utils.ApplicationException;
 import com.indocs.cache.CacheName;
+import com.indocs.model.constants.ApplicationConstants;
 import com.indocs.model.domain.User;
 import com.indocs.model.request.UserCreateRequest;
 import com.indocs.model.request.UserProfileRequest;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import static com.indocs.model.constants.ApplicationConstants.Roles;
+import static com.indocs.model.constants.ApplicationConstants.UserStatus.INACTIVE;
 import java.util.Optional;
 
 @Component("userManagementHelper")
@@ -50,7 +52,16 @@ public class UserManagementHelper implements InitializingBean {
     private EntityValidator entityValidator;
 
     @Cacheable(value = "userEntitlementCache", key = "#id")
-    public UserEntity getUserRolesActions(String id) {
+    public UserEntity getUserRolesActions(String id) throws ApplicationException{
+        UserEntity userEntity = userManagementDAO.getUserRolesActions(id);
+        if (userEntity == null) {
+            throw new ApplicationException(String.format("User %s doesnt exist in the system",id),
+                    HttpStatus.BAD_REQUEST);
+        }
+        if (userEntity.getUser().getStatus() == INACTIVE) {
+            throw new ApplicationException(String.format("User %s is inactive in the system",id),
+                    HttpStatus.BAD_REQUEST);
+        }
         return userManagementDAO.getUserRolesActions(id);
     }
 
@@ -58,9 +69,13 @@ public class UserManagementHelper implements InitializingBean {
         return userManagementDAO.modifyUserDetails(user);
     }
 
-    public User getUserDetails(String id) {
-        UserEntity userEntity = Optional.ofNullable(((UserEntity) userEntitementCache.get(id).get()))
-                .orElseGet(() -> getUserRolesActions(id));
+    public User getUserDetails(String id) throws ApplicationException {
+        UserEntity userEntity = null;
+        if (userEntitementCache.get(id) != null) {
+            userEntity = (UserEntity) userEntitementCache.get(id).get();
+        } else {
+            userEntity = getUserRolesActions(id);
+        }
         if (userEntity != null) {
             return userEntity.getUser();
         }

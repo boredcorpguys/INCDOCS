@@ -1,6 +1,7 @@
 package com.incdocs.user.services;
 
 import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
 import com.indocs.model.domain.User;
 import com.indocs.model.request.UserProfileRequest;
 import com.indocs.model.response.UserEntity;
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("incdocs/user")
+@RequestMapping("/incdocs/user")
 public class UserManagementService {
     @Autowired
     @Qualifier("userManagementHelper")
@@ -21,9 +22,9 @@ public class UserManagementService {
      * @param user
      * @return
      */
-    @PostMapping("/login")
-    public UserEntity login(@RequestBody UserProfileRequest user) {
-        return userManagementHelper.getUserRolesActions(user.getId());
+    @GetMapping("/login")
+    public UserEntity login(@RequestHeader(value = "incdocsID") String id) throws ApplicationException {
+        return userManagementHelper.getUserRolesActions(id);
     }
 
     /**
@@ -44,7 +45,7 @@ public class UserManagementService {
      * @return
      */
     @GetMapping("/profile")
-    public User getUserDetails(@RequestParam(value = "id", required = true) String id) {
+    public User getUserDetails(@RequestHeader(value = "incdocsID") String id) throws ApplicationException {
         return userManagementHelper.getUserDetails(id);
     }
 }

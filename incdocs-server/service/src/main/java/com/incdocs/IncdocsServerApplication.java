@@ -18,10 +18,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan(basePackages = { "com.incdocs.*"})
 @EnableCaching
 public class IncdocsServerApplication {
+
     public static void main(String[] args) {
 
         SpringApplication.run(IncdocsServerApplication.class, args);
     }
+
     @Bean
     public CacheManager cacheManager() {
         return new EhCacheCacheManager(ehCacheCacheManager().getObject());

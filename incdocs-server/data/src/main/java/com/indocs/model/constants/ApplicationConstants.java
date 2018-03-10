@@ -3,6 +3,21 @@ package com.indocs.model.constants;
 import java.util.Arrays;
 
 public class ApplicationConstants {
+
+    public enum RequestHeaders {
+        ID("incdocsID"),
+        ORIGIN("Access-Control-Allow-Origin");
+        private String name;
+
+        RequestHeaders(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
     public enum EntitlementInfo {
         ROLE("role"),
         ACTION("action"),
