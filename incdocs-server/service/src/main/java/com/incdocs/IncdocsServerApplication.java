@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication
 @EnableWebMvc
 @ImportResource("classpath:queries.xml")
-@ComponentScan(basePackages = { "com.incdocs.*"})
+@ComponentScan(basePackages = {"com.incdocs.*"})
 @EnableCaching
 public class IncdocsServerApplication {
 
@@ -45,7 +45,11 @@ public class IncdocsServerApplication {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/incdocs").allowedOrigins("*");
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "OPTIONS", "PUT")
+                        .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
+                        .allowCredentials(true).maxAge(3600);
             }
         };
     }
