@@ -1,17 +1,14 @@
 package com.incdocs.user.helper;
 
-import com.incdocs.entitlement.validator.RoleValidator;
 import com.incdocs.entity.helper.EntityManagementHelper;
-import com.incdocs.entity.validator.EntityValidator;
 import com.incdocs.user.dao.UserDAO;
-import com.incdocs.user.validator.UserValidator;
 import com.incdocs.utils.ApplicationException;
 import com.indocs.cache.CacheName;
-import com.indocs.model.constants.ApplicationConstants;
 import com.indocs.model.domain.User;
 import com.indocs.model.request.UserCreateRequest;
 import com.indocs.model.request.UserProfileRequest;
 import com.indocs.model.response.UserEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,9 +17,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 import static com.indocs.model.constants.ApplicationConstants.Roles;
 import static com.indocs.model.constants.ApplicationConstants.UserStatus.INACTIVE;
-import java.util.Optional;
 
 @Component("userManagementHelper")
 public class UserManagementHelper implements InitializingBean {
@@ -39,27 +37,16 @@ public class UserManagementHelper implements InitializingBean {
     @Qualifier("userManagementDAO")
     private UserDAO userManagementDAO;
 
-    @Autowired
-    @Qualifier("userValidator")
-    private UserValidator userValidator;
-
-    @Autowired
-    @Qualifier("roleValidator")
-    private RoleValidator roleValidator;
-
-    @Autowired
-    @Qualifier("entityValidator")
-    private EntityValidator entityValidator;
 
     @Cacheable(value = "userEntitlementCache", key = "#id")
-    public UserEntity getUserRolesActions(String id) throws ApplicationException{
+    public UserEntity getUserRolesActions(String id) throws ApplicationException {
         UserEntity userEntity = userManagementDAO.getUserRolesActions(id);
         if (userEntity == null) {
-            throw new ApplicationException(String.format("User %s doesnt exist in the system",id),
+            throw new ApplicationException(String.format("User %s doesnt exist in the system", id),
                     HttpStatus.BAD_REQUEST);
         }
         if (userEntity.getUser().getStatus() == INACTIVE) {
-            throw new ApplicationException(String.format("User %s is inactive in the system",id),
+            throw new ApplicationException(String.format("User %s is inactive in the system", id),
                     HttpStatus.BAD_REQUEST);
         }
         return userManagementDAO.getUserRolesActions(id);
@@ -69,7 +56,7 @@ public class UserManagementHelper implements InitializingBean {
         return userManagementDAO.modifyUserDetails(user);
     }
 
-    public User getUserDetails(String id) throws ApplicationException {
+    public User getUser(String id) throws ApplicationException {
         UserEntity userEntity = null;
         if (userEntitementCache.get(id) != null) {
             userEntity = (UserEntity) userEntitementCache.get(id).get();
@@ -82,9 +69,9 @@ public class UserManagementHelper implements InitializingBean {
         return null;
     }
 
-    public String createUser(UserCreateRequest userCreateRequest) throws ApplicationException {
+    public String createUser(String adminID, UserCreateRequest userCreateRequest) throws ApplicationException {
         // validate if not an existing user
-        User user = getUserDetails(userCreateRequest.getId());
+        User user = getUser(userCreateRequest.getId());
         if (user != null) {
             throw new ApplicationException(String.format("user id: %s, is already present in system"),
                     HttpStatus.BAD_REQUEST);
@@ -92,16 +79,28 @@ public class UserManagementHelper implements InitializingBean {
 
         // validate the role passed is a system defined role
         String roleID = userCreateRequest.getRole();
-        roleValidator.validate(roleID);
+        if (Roles.valueOf(roleID) == null) {
+            throw new ApplicationException(String.format("%s is invalid role", roleID)
+                    , HttpStatus.BAD_REQUEST);
+        }
 
         // validate the entity
         String companyID = userCreateRequest.getCompanyID();
-        entityValidator.validate(entityManagementHelper.getEntity(companyID));
+        if (Objects.nonNull(entityManagementHelper.getEntity(companyID)))
+            throw new ApplicationException("entity not setup in incdocs",
+                    HttpStatus.BAD_REQUEST);
+
+        // validate if the requested company belongs to admin
+        UserEntity admin = getUserRolesActions(adminID);
+        if (!StringUtils.equals(companyID, admin.getUser().getCompanyID())) {
+            throw new ApplicationException(String.format("user cant be setup for %id", companyID),
+                    HttpStatus.BAD_REQUEST);
+        }
 
         // check if role is group head
         Roles role = Roles.valueOf(roleID);
         if (role != Roles.GROUP_HEAD) {
-            User groupHead = getUserDetails(userCreateRequest.getGhID());
+            User groupHead = getUser(userCreateRequest.getGhID());
             if (groupHead != null) {
                 throw new ApplicationException(String.format("group head id: %s, is not configured in system"),
                         HttpStatus.BAD_REQUEST);

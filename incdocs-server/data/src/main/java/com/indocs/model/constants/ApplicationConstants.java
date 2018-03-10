@@ -6,6 +6,7 @@ public class ApplicationConstants {
 
     public enum RequestHeaders {
         ID("incdocsID"),
+        PSWD("password"),
         ORIGIN("Access-Control-Allow-Origin");
         private String name;
 

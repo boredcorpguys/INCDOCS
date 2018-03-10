@@ -1,37 +1,30 @@
 package com.incdocs.entitlement.services;
 
 import com.incdocs.entitlement.dao.EntitlementDAO;
-import com.indocs.model.domain.Role;
+import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
+import com.indocs.model.domain.User;
 import com.indocs.model.response.RoleActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/incdocs/entitlement")
+@RequestMapping("/incdocs/role")
 public class EntitlementManagementService {
 
     @Autowired
     @Qualifier("entitlementDAO")
     private EntitlementDAO entitlementDAO;
 
-    @GetMapping("/role")
-    public @ResponseBody
-    Role getRoleByID(@RequestParam(value="id", required=true) int id) {
-        return entitlementDAO.getRoleInfo(id);
-    }
+    @Autowired
+    @Qualifier("userManagementHelper")
+    private UserManagementHelper userManagementHelper;
 
-    @GetMapping("/role/action")
+    @GetMapping("/actions")
     public @ResponseBody
-    RoleActions getRoleActions(@RequestParam(value="id", required=true) int id) {
-        return entitlementDAO.getRoleActions(id);
-    }
-
-    @GetMapping("/roles")
-    public @ResponseBody
-    List<Role> getRoles() {
-        return entitlementDAO.getRoles();
+    RoleActions getRoleActions(@RequestHeader(value = "incdocsID") String incdocsID) throws ApplicationException {
+        User user = userManagementHelper.getUser(incdocsID);
+        return entitlementDAO.getRoleActions(user.getRoleID());
     }
 }

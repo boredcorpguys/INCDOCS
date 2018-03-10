@@ -1,15 +1,20 @@
 package com.incdocs.user.services;
 
+import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
 import com.indocs.model.domain.Entity;
 import com.indocs.model.request.UserCreateRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/incdocs/admin")
 public class AdminServices {
+
+    @Autowired
+    @Qualifier("userManagementHelper")
+    private UserManagementHelper userManagementHelper;
 
     @PostMapping("/create/company")
     public Entity createCompany() {
@@ -17,8 +22,10 @@ public class AdminServices {
     }
 
     @PostMapping("/create/user")
-    public String createUser(@RequestParam(value = "id", required = true)UserCreateRequest userCreateRequest) {
+    public String createUser(@RequestHeader(value = "incdocsID") String adminID,
+                             @RequestBody UserCreateRequest userCreateRequest)
+            throws ApplicationException {
 
-        return null;
+        return userManagementHelper.createUser(adminID, userCreateRequest);
     }
 }

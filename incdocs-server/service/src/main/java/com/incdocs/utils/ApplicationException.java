@@ -9,6 +9,7 @@ public class ApplicationException extends Exception {
         super(message, cause);
         httpStatusCode = httpStatus;
     }
+
     public ApplicationException(String message, HttpStatus httpStatus) {
         super(message);
         httpStatusCode = httpStatus;

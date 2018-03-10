@@ -71,13 +71,13 @@ public class EntityDAO {
     public List<Role> getEntityRoles(String id) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .query(
-                queryManager.getSQL(SEL_ENTITY_ROLES),
-                new MapSqlParameterSource("id", id),
-                (resultSet, rowCount) ->
-                        new Role(resultSet.getInt("id"))
-                                .setRoleName(resultSet.getString("name"))
-                                .setDescription(resultSet.getString("description"))
+                        queryManager.getSQL(SEL_ENTITY_ROLES),
+                        new MapSqlParameterSource("id", id),
+                        (resultSet, rowCount) ->
+                                new Role(resultSet.getInt("id"))
+                                        .setRoleName(resultSet.getString("name"))
+                                        .setDescription(resultSet.getString("description"))
 
-        );
+                );
     }
 }

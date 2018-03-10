@@ -13,9 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.incdocs.utils.QueryManager.Sql.SEL_ACTIONS_FOR_ROLE;
-import static com.incdocs.utils.QueryManager.Sql.SEL_ROLES;
-import static com.incdocs.utils.QueryManager.Sql.SEL_ROLE_BY_ID;
+import static com.incdocs.utils.QueryManager.Sql.*;
 
 @Repository("entitlementDAO")
 public class EntitlementDAO {

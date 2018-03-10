@@ -8,6 +8,18 @@ import java.util.Map;
 
 @Component("queryManager")
 public class QueryManager implements InitializingBean {
+    @Resource(name = "queryMap")
+    private Map<String, String> queryMap;
+
+    public String getSQL(QueryManager.Sql sql) {
+        return queryMap.get(sql.getKey());
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(queryMap);
+    }
+
     public enum Sql {
         SEL_USER_ENTITLEMENTS("select_user_entitlement"),
         SEL_USER("select_user"),
@@ -31,17 +43,5 @@ public class QueryManager implements InitializingBean {
         public String getKey() {
             return key;
         }
-    }
-
-    @Resource(name = "queryMap")
-    private Map<String, String> queryMap;
-
-    public String getSQL(QueryManager.Sql sql) {
-        return queryMap.get(sql.getKey());
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        System.out.println(queryMap);
     }
 }

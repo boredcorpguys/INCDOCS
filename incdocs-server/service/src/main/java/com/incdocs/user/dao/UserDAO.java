@@ -18,7 +18,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
-import java.util.List;
 
 import static com.incdocs.utils.QueryManager.Sql.*;
 
@@ -40,8 +39,7 @@ public class UserDAO {
     @Qualifier("entityDAO")
     private EntityDAO entityDAO;
 
-   public UserEntity getUserRolesActions(String id) {
-        System.out.println("getUserRolesActions");
+    public UserEntity getUserRolesActions(String id) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_USER_ENTITLEMENTS),
@@ -100,14 +98,14 @@ public class UserDAO {
         String incdocsID = Utils.idGenerator(userCreateRequest.getCompanyID(), userCreateRequest.getId());
         jdbcTemplate.update(queryManager.getSQL(INSERT_USER),
                 new Object[]{
-                    userCreateRequest.getName(),
-                    incdocsID,
-                    userCreateRequest.getId(),
-                    userCreateRequest.getRole(),
-                    userCreateRequest.getCompanyID(),
-                    userCreateRequest.isClient(),
-                    "N",
-                    userCreateRequest.getGhID()
+                        userCreateRequest.getName(),
+                        incdocsID,
+                        userCreateRequest.getId(),
+                        userCreateRequest.getRole(),
+                        userCreateRequest.getCompanyID(),
+                        userCreateRequest.isClient(),
+                        "N",
+                        userCreateRequest.getGhID()
                 });
         return incdocsID;
     }
