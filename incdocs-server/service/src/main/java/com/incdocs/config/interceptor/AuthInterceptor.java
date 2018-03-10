@@ -29,14 +29,4 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         UserEntity userEntity = userManagementHelper.getUserRolesActions(incdocsID);
         return userEntity != null;
     }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        response.setHeader(ORIGIN.getName(), "*");
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        response.setHeader(ORIGIN.getName(), "*");
-    }
 }
