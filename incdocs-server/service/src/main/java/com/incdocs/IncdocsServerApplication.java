@@ -39,18 +39,4 @@ public class IncdocsServerApplication {
         cmfb.setShared(true);
         return cmfb;
     }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "OPTIONS", "PUT")
-                        .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
-                        .allowCredentials(true).maxAge(3600);
-            }
-        };
-    }
 }
