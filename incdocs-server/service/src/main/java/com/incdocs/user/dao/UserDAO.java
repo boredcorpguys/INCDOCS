@@ -6,7 +6,7 @@ import com.incdocs.utils.QueryManager;
 import com.incdocs.utils.Utils;
 import com.indocs.model.constants.ApplicationConstants;
 import com.indocs.model.domain.User;
-import com.indocs.model.request.UserCreateRequest;
+import com.indocs.model.request.CreateUserRequest;
 import com.indocs.model.request.UserProfileRequest;
 import com.indocs.model.response.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +95,7 @@ public class UserDAO {
                 .update(queryManager.getSQL(UPD_USER), params);
     }
 
-    public String createUser(UserCreateRequest userCreateRequest) {
+    public String createUser(CreateUserRequest userCreateRequest) {
         String incdocsID = Utils.idGenerator(userCreateRequest.getCompanyID(), userCreateRequest.getId());
         jdbcTemplate.update(queryManager.getSQL(INSERT_USER),
                 new Object[]{

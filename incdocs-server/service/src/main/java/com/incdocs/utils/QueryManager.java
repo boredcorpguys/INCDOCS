@@ -32,7 +32,9 @@ public class QueryManager implements InitializingBean {
         SEL_RESOURCE_GROUP("select_resource_group"),
         SEL_ENTITY_ROLES("select_entities_roles"),
         SEL_ENTITIES_BY_NAME("select_entities_by_name"),
-        INSERT_USER("insert_user");
+        INSERT_USER("insert_user"),
+        INSERT_COMPANY("insert_company"),
+        INSERT_COMPANY_ROLE("insert_company_role");
 
         private String key;
 

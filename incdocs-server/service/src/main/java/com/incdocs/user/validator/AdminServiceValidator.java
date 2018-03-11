@@ -6,7 +6,8 @@ import com.incdocs.utils.ApplicationException;
 import com.indocs.model.constants.ApplicationConstants;
 import com.indocs.model.domain.Role;
 import com.indocs.model.domain.User;
-import com.indocs.model.request.UserCreateRequest;
+import com.indocs.model.request.CreateCompanyRequest;
+import com.indocs.model.request.CreateUserRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -31,12 +32,12 @@ public class AdminServiceValidator {
     @Qualifier("entityManagementHelper")
     private EntityManagementHelper entityManagementHelper;
 
-    @Before("execution(* com.incdocs.user.services.AdminServices.createUser (java.lang.String, com.indocs.model.request.UserCreateRequest))")
+    @Before("execution(* com.incdocs.user.services.AdminService.createUser (java.lang.String, com.indocs.model.request.CreateUserRequest))")
     public void validateCreateUserOperation(JoinPoint joinPoint) throws ApplicationException {
 
         System.out.println("validating create user operation with args");
         String incdocsID = (String) joinPoint.getArgs()[0];
-        UserCreateRequest userCreateRequest = (UserCreateRequest) joinPoint.getArgs()[1];
+        CreateUserRequest userCreateRequest = (CreateUserRequest) joinPoint.getArgs()[1];
 
         validate(userCreateRequest.getName(), "name");
         validate(userCreateRequest.getId(), "id");
@@ -58,5 +59,14 @@ public class AdminServiceValidator {
                     String.format("group head id: %s, is not configured in system",userCreateRequest.getGhID()),
                     HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Before("execution(* com.incdocs.user.services.AdminService.createCompany (java.lang.String, com.indocs.model.request.CreateCompanyRequest))")
+    public void validateCreateCompanyRequest(JoinPoint joinPoint) throws ApplicationException {
+        System.out.println("validating create company operation with args");
+        CreateCompanyRequest createCompanyRequest = (CreateCompanyRequest)joinPoint.getArgs()[1];
+        validate(createCompanyRequest.getId(),"id");
+        validate(createCompanyRequest.getName(), "name");
+        validate(createCompanyRequest.getPan(), "pan");
     }
 }

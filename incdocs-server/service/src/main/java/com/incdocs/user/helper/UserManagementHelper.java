@@ -5,9 +5,9 @@ import com.incdocs.user.dao.UserDAO;
 import com.incdocs.utils.ApplicationException;
 import com.indocs.cache.CacheName;
 import com.indocs.model.domain.User;
-import com.indocs.model.request.UserCreateRequest;
+import com.indocs.model.request.CreateCompanyRequest;
+import com.indocs.model.request.CreateUserRequest;
 import com.indocs.model.request.UserProfileRequest;
-import com.indocs.model.response.UserEntity;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,11 +51,11 @@ public class UserManagementHelper implements InitializingBean {
         return user;
     }
 
-    public String createUser(String adminID, UserCreateRequest userCreateRequest) throws ApplicationException {
+    public String createUser(String adminID, CreateUserRequest createUserRequest) throws ApplicationException {
         User admin = getUser(adminID);
-        userCreateRequest.setCompanyID(admin.getCompanyID());
-        userCreateRequest.setClient(admin.isClient());
-        return userManagementDAO.createUser(userCreateRequest);
+        createUserRequest.setCompanyID(admin.getCompanyID());
+        createUserRequest.setClient(admin.isClient());
+        return userManagementDAO.createUser(createUserRequest);
     }
 
     @Override

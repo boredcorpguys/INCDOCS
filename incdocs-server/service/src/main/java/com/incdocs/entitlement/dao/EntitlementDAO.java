@@ -61,9 +61,10 @@ public class EntitlementDAO {
         return ra;
     }
 
-    public List<Role> getRoles() {
-        return jdbcTemplate.query(
+    public List<Role> getRoles(boolean isClient) {
+        return new NamedParameterJdbcTemplate(jdbcTemplate).query(
                 queryManager.getSQL(SEL_ROLES),
+                new MapSqlParameterSource("flag", isClient),
                 (resultSet, rowCount) ->
                         new Role(resultSet.getInt("id"))
                                 .setRoleName(resultSet.getString("name"))

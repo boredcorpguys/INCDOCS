@@ -3,14 +3,18 @@ package com.incdocs.entity.dao;
 import com.incdocs.utils.QueryManager;
 import com.indocs.model.domain.Entity;
 import com.indocs.model.domain.Role;
+import com.indocs.model.request.CreateCompanyRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.incdocs.utils.QueryManager.Sql.*;
@@ -80,4 +84,36 @@ public class EntityDAO {
 
                 );
     }
+
+    public int createCompany(CreateCompanyRequest createCompanyRequest) {
+        return jdbcTemplate.update(
+                queryManager.getSQL(INSERT_COMPANY),
+                new Object[]{
+                    createCompanyRequest.getId(),
+                        createCompanyRequest.getName(),
+                        createCompanyRequest.getPan(),
+                        true,
+                        true
+                });
+    }
+
+    public void createCompanyRoles(String companyID, List<Role> roles) {
+        jdbcTemplate.batchUpdate(queryManager.getSQL(INSERT_COMPANY_ROLE),
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
+                        preparedStatement.setString(1, companyID);
+                        preparedStatement.setInt(2, roles.get(i).getRoleID());
+                        preparedStatement.setBoolean(3, true);
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return roles.size();
+                    }
+                }
+        );
+    }
+
+
 }

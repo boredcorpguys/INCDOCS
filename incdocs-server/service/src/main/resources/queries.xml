@@ -38,6 +38,7 @@
         <entry key="select_roles">
             <value><![CDATA[
                     SELECT * FROM "INCDOCS"."ROLES"
+                    WHERE "IS_CLIENT"=:flag
                     ORDER BY "ID" ASC
                 ]]>
             </value>
@@ -151,6 +152,24 @@
                     "INCDOCS"."USERS"(
                     "NAME", "INCDOCS_ID", "EMP_ID", "ROLE_ID", "COMPANY_ID", "IS_CLIENT", "STATUS", "MANAGER_ID")
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+                ]]>
+            </value>
+        </entry>
+        <entry key="insert_company">
+            <value>
+                <![CDATA[
+                    INSERT INTO "INCDOCS"."ENTITIES"(
+                    "ID", "NAME", "PAN", "IS_CLIENT", "IS_ACTIVE")
+                    VALUES (?, ?, ?, ?, ?)
+                ]]>
+            </value>
+        </entry>
+        <entry key="insert_company_role">
+            <value>
+                <![CDATA[
+                    INSERT INTO "INCDOCS"."ENTITY_ROLES"(
+                    "ENTITY_ID", "ROLE_ID", "IS_ACTIVE")
+                    VALUES (?, ?, ?)
                 ]]>
             </value>
         </entry>

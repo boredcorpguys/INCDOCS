@@ -1,6 +1,6 @@
 package com.indocs.model.request;
 
-public class UserCreateRequest {
+public class CreateUserRequest {
     private String name;
     private String id;
     private String entityID;
@@ -13,7 +13,7 @@ public class UserCreateRequest {
         return id;
     }
 
-    public UserCreateRequest setId(String id) {
+    public CreateUserRequest setId(String id) {
         this.id = id;
         return this;
     }
@@ -22,7 +22,7 @@ public class UserCreateRequest {
         return entityID;
     }
 
-    public UserCreateRequest setEntityID(String entityID) {
+    public CreateUserRequest setEntityID(String entityID) {
         this.entityID = entityID;
         return this;
     }
@@ -31,7 +31,7 @@ public class UserCreateRequest {
         return ghID;
     }
 
-    public UserCreateRequest setGhID(String ghID) {
+    public CreateUserRequest setGhID(String ghID) {
         this.ghID = ghID;
         return this;
     }
@@ -40,7 +40,7 @@ public class UserCreateRequest {
         return roleID;
     }
 
-    public UserCreateRequest setRoleID(int roleID) {
+    public CreateUserRequest setRoleID(int roleID) {
         this.roleID = roleID;
         return this;
     }
@@ -49,7 +49,7 @@ public class UserCreateRequest {
         return companyID;
     }
 
-    public UserCreateRequest setCompanyID(String companyID) {
+    public CreateUserRequest setCompanyID(String companyID) {
         this.companyID = companyID;
         return this;
     }
@@ -58,7 +58,7 @@ public class UserCreateRequest {
         return isClient;
     }
 
-    public UserCreateRequest setClient(boolean client) {
+    public CreateUserRequest setClient(boolean client) {
         isClient = client;
         return this;
     }
@@ -67,7 +67,7 @@ public class UserCreateRequest {
         return name;
     }
 
-    public UserCreateRequest setName(String name) {
+    public CreateUserRequest setName(String name) {
         this.name = name;
         return this;
     }
