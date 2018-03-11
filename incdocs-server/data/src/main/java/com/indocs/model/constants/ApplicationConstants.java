@@ -64,13 +64,14 @@ public class ApplicationConstants {
             this.status = status;
         }
 
-        public String getStatus() {
-            return status;
-        }
         public static UserStatus fromStatus(String status) {
             return Arrays.stream(UserStatus.values())
                     .filter(info -> info.status.equals(status))
                     .findFirst().orElse(null);
+        }
+
+        public String getStatus() {
+            return status;
         }
     }
 }

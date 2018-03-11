@@ -3,11 +3,13 @@ package com.indocs.model.response;
 import com.indocs.model.domain.Action;
 import com.indocs.model.domain.Role;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class RoleActions {
-   private Role role;
-   private List<Action> actions = new ArrayList<>();
+    private Role role;
+    private List<Action> actions = new ArrayList<>();
 
     public Role getRole() {
         return role;

@@ -19,13 +19,13 @@ public class Role {
         return roleName;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public Role setRoleName(String roleName) {
         this.roleName = roleName;
         return this;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Role setDescription(String description) {

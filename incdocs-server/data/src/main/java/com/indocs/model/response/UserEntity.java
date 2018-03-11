@@ -6,8 +6,7 @@ import com.indocs.model.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserEntity
-{
+public class UserEntity {
     private final User user;
     private final List<String> entities;
 

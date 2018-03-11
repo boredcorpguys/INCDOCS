@@ -6,7 +6,8 @@ public enum CacheName {
     USER("userCache"),
     USER_ENTITLEMENTS("userEntitlementCache"),
     ENTITY("entityCache"),
-    ENTITY_ROLES("entityRoleCache");
+    ENTITY_ROLES("entityRoleCache"),
+    ROLE_ACTIONS("roleActionCache");
 
     private String name;
 

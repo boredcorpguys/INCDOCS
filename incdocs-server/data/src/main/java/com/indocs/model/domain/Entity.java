@@ -28,6 +28,11 @@ public class Entity {
         return name;
     }
 
+    public Entity setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public List<Entity> getChildEntities() {
         return childEntities;
     }
@@ -38,11 +43,6 @@ public class Entity {
 
     public Entity setParentID(String parentID) {
         this.parentID = parentID;
-        return this;
-    }
-
-    public Entity setName(String name) {
-        this.name = name;
         return this;
     }
 

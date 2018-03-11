@@ -38,17 +38,15 @@ public class EntitlementDAO {
     }
 
     public RoleActions getRoleActions(int roleID) {
-
-        return new NamedParameterJdbcTemplate(jdbcTemplate)
+        final RoleActions ra = new RoleActions();
+        new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_ACTIONS_FOR_ROLE),
                         new MapSqlParameterSource("id", roleID),
                         (resultSet, rowCount) -> {
-                            Role role = null;
-                            RoleActions ra = new RoleActions();
                             while (resultSet.next()) {
-                                if (role == null) {
-                                    role = new Role(resultSet.getInt("role_id"))
+                                if (ra.getRole() == null) {
+                                    Role role = new Role(resultSet.getInt("role_id"))
                                             .setRoleName(resultSet.getString("role_name"))
                                             .setDescription(resultSet.getString("role_desc"));
                                     ra.setRole(role);
@@ -60,6 +58,7 @@ public class EntitlementDAO {
                             }
                             return ra;
                         });
+        return ra;
     }
 
     public List<Role> getRoles() {

@@ -4,7 +4,7 @@ public class UserCreateRequest {
     private String name;
     private String id;
     private String entityID;
-    private String role;
+    private int roleID;
     private String ghID;
     private String companyID;
     private boolean isClient;
@@ -36,12 +36,12 @@ public class UserCreateRequest {
         return this;
     }
 
-    public String getRole() {
-        return role;
+    public int getRoleID() {
+        return roleID;
     }
 
-    public UserCreateRequest setRole(String role) {
-        this.role = role;
+    public UserCreateRequest setRoleID(int roleID) {
+        this.roleID = roleID;
         return this;
     }
 

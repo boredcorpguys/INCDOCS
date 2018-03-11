@@ -5,7 +5,7 @@
          monitoring="autodetect"
          dynamicConfig="true">
 
-    <cache name="userEntitlementCache"
+    <cache name="userCache"
            maxElementsInMemory="100"
            eternal="false"
            overflowToDisk="false"
@@ -26,6 +26,16 @@
     </cache>
 
     <cache name="entityRoleCache"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="300"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+    </cache>
+
+    <cache name="roleActionCache"
            maxElementsInMemory="100"
            eternal="false"
            overflowToDisk="false"

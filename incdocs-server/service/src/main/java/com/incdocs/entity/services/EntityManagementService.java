@@ -5,6 +5,7 @@ import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
 import com.indocs.model.domain.Entity;
 import com.indocs.model.domain.Role;
+import com.indocs.model.domain.User;
 import com.indocs.model.response.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,8 +34,8 @@ public class EntityManagementService {
     @GetMapping("/detail")
     public @ResponseBody
     Entity getEntity(@RequestHeader(value = "incdocsID") String incdocsID) throws ApplicationException {
-        UserEntity userEntity = userManagementHelper.getUserRolesActions(incdocsID);
-        return entityManagementHelper.getEntity(userEntity.getUser().getCompanyID());
+        User user = userManagementHelper.getUser(incdocsID);
+        return entityManagementHelper.getEntity(user.getCompanyID());
     }
 
     /**

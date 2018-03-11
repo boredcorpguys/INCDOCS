@@ -63,11 +63,11 @@ public class UserDAO {
                 );
     }
 
-    public User getUser(String id) {
+    public User getUser(String incdocsID) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_USER),
-                        new MapSqlParameterSource("id", id),
+                        new MapSqlParameterSource("id", incdocsID),
                         (ResultSet resultSet, int rowCount) -> {
                             User user = new User(resultSet.getString("incdocs_id"))
                                     .setName(resultSet.getString("name"))
@@ -77,6 +77,7 @@ public class UserDAO {
                                     .setEmailID(resultSet.getString("email_id"))
                                     .setContactNumber(resultSet.getString("contact_number"))
                                     .setClient(resultSet.getBoolean("is_client"))
+                                    .setManagerID(resultSet.getString("manager_id"))
                                     .setStatus(
                                             ApplicationConstants.UserStatus.fromStatus(
                                                     resultSet.getString("status")));
@@ -101,7 +102,7 @@ public class UserDAO {
                         userCreateRequest.getName(),
                         incdocsID,
                         userCreateRequest.getId(),
-                        userCreateRequest.getRole(),
+                        userCreateRequest.getRoleID(),
                         userCreateRequest.getCompanyID(),
                         userCreateRequest.isClient(),
                         "N",

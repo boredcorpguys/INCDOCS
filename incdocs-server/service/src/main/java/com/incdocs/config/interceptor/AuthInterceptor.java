@@ -2,6 +2,7 @@ package com.incdocs.config.interceptor;
 
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
+import com.indocs.model.domain.User;
 import com.indocs.model.response.UserEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     , HttpStatus.BAD_REQUEST);
         }
         System.out.println("AuthInterceptor: authenticating user: " + incdocsID);
-        UserEntity userEntity = userManagementHelper.getUserRolesActions(incdocsID);
-        return userEntity != null;
+        User user = userManagementHelper.getUser(incdocsID);
+        return user != null;
     }
 }

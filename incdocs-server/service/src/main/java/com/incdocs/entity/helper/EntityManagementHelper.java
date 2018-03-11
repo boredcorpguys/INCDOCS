@@ -6,6 +6,7 @@ import com.indocs.model.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,7 +19,13 @@ public class EntityManagementHelper {
 
     @Cacheable(value = "entityCache", key = "#id")
     public Entity getEntity(String id) {
-        return entityDAO.getEntity(id);
+        Entity entity = null;
+        try {
+            entity = entityDAO.getEntity(id);
+        } catch (EmptyResultDataAccessException ex) {
+            ex.printStackTrace();
+        }
+        return entity;
     }
 
     @Cacheable(value = "entityRoleCache", key = "#id")
