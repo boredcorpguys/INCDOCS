@@ -1,14 +1,15 @@
 package com.incdocs.entity.dao;
 
 import com.incdocs.utils.QueryManager;
-import com.indocs.model.domain.Entity;
-import com.indocs.model.domain.Role;
-import com.indocs.model.request.CreateCompanyRequest;
+import com.incdocs.model.domain.Entity;
+import com.incdocs.model.domain.Role;
+import com.incdocs.model.request.CreateCompanyRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -28,24 +29,31 @@ public class EntityDAO {
     @Qualifier("queryManager")
     private QueryManager queryManager;
 
+    private RowMapper<Entity> entityRowMapper = (resultSet, rowCount) -> {
+
+        Entity parent = new Entity(resultSet.getString("id"))
+                .setName(resultSet.getString("name"))
+                .setParentID(resultSet.getString("parent_id"))
+                .setGroupHeadID(resultSet.getString("gh_id"));
+
+        if (parent.getParentID() == null) {
+            getChildEntities(parent.getEntityID())
+                    .forEach(child -> parent.addChildEntity(child));
+        }
+        return parent;
+    };
+
     public Entity getEntity(String id) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_ENTITY),
                         new MapSqlParameterSource("id", id),
-                        (resultSet, rowCount) -> {
+                        entityRowMapper);
+    }
 
-                            Entity parent = new Entity(resultSet.getString("id"))
-                                    .setName(resultSet.getString("name"))
-                                    .setParentID(resultSet.getString("parent_id"))
-                                    .setGroupHeadID(resultSet.getString("gh_id"));
-
-                            if (parent.getParentID() == null) {
-                                getChildEntities(parent.getEntityID())
-                                        .forEach(child -> parent.addChildEntity(child));
-                            }
-                            return parent;
-                        });
+    public List<Entity> getAllEntities() {
+        return jdbcTemplate.query(queryManager.getSQL(SEL_ALL_ENTITIES),
+                entityRowMapper);
     }
 
     public List<Entity> getChildEntities(String parentID) {
@@ -75,7 +83,7 @@ public class EntityDAO {
     public List<Role> getEntityRoles(String id) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .query(
-                        queryManager.getSQL(SEL_ENTITY_ROLES),
+                        queryManager.getSQL(SEL_ROLES_FOR_ENTITY),
                         new MapSqlParameterSource("id", id),
                         (resultSet, rowCount) ->
                                 new Role(resultSet.getInt("id"))
@@ -89,7 +97,7 @@ public class EntityDAO {
         return jdbcTemplate.update(
                 queryManager.getSQL(INSERT_COMPANY),
                 new Object[]{
-                    createCompanyRequest.getId(),
+                        createCompanyRequest.getId(),
                         createCompanyRequest.getName(),
                         createCompanyRequest.getPan(),
                         true,

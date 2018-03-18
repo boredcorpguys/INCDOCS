@@ -27,6 +27,13 @@
                 ]]>
             </value>
         </entry>
+        <entry key="select_all_users">
+            <value><![CDATA[
+                    SELECT *
+                    FROM "INCDOCS"."USERS" u
+                ]]>
+            </value>
+        </entry>
         <entry key="modify_user">
             <value><![CDATA[
                     UPDATE "INCDOCS"."USERS"
@@ -35,15 +42,15 @@
                 ]]>
             </value>
         </entry>
-        <entry key="select_roles">
+        <entry key="select_all_roles">
             <value><![CDATA[
                     SELECT * FROM "INCDOCS"."ROLES"
-                    WHERE "IS_CLIENT"=:flag
+                    WHERE "IS_ACTIVE"=true
                     ORDER BY "ID" ASC
                 ]]>
             </value>
         </entry>
-        <entry key="select_role_by_id">
+        <entry key="select_role">
             <value><![CDATA[
                     select * from "INCDOCS"."ROLES" where "ID"=:id
                 ]]>
@@ -67,6 +74,26 @@
                         select e."ID", e."NAME", e."PARENT_ID"
                                         from "INCDOCS"."ENTITIES" e
                                         where "ID" = :id
+                    ), group_head as (
+                        select ue."USER_ID" as GH_ID, ue."ENTITY_ID"
+                        from "INCDOCS"."USER_ENTITLEMENTS" ue
+                        inner join "INCDOCS"."USERS" u on ue."USER_ID" = u."INCDOCS_ID"
+                        inner join "INCDOCS"."ROLES" r on u."ROLE_ID" = r."ID"
+                        where ue."ENTITY_ID" in(select "ID" from entities) and r."NAME"='GROUP_HEAD'
+                    )
+                    select e.*,h.GH_ID
+                    from entities e
+                    left join group_head h
+                    on e."ID" = h."ENTITY_ID"
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_all_entities">
+            <value>
+                <![CDATA[
+                    with entities as (
+                        select e."ID", e."NAME", e."PARENT_ID"
+                                        from "INCDOCS"."ENTITIES" e
                     ), group_head as (
                         select ue."USER_ID" as GH_ID, ue."ENTITY_ID"
                         from "INCDOCS"."USER_ENTITLEMENTS" ue
@@ -123,7 +150,7 @@
                 on e."ID" = h."ENTITY_ID"
             </value>
         </entry>
-        <entry key="select_entities_roles">
+        <entry key="select_roles_for_entity">
             <value>
                 <![CDATA[
                     select *

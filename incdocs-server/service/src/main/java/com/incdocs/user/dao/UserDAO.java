@@ -4,20 +4,22 @@ import com.incdocs.entitlement.dao.EntitlementDAO;
 import com.incdocs.entity.dao.EntityDAO;
 import com.incdocs.utils.QueryManager;
 import com.incdocs.utils.Utils;
-import com.indocs.model.constants.ApplicationConstants;
-import com.indocs.model.domain.User;
-import com.indocs.model.request.CreateUserRequest;
-import com.indocs.model.request.UserProfileRequest;
-import com.indocs.model.response.UserEntity;
+import com.incdocs.model.constants.ApplicationConstants;
+import com.incdocs.model.domain.User;
+import com.incdocs.model.request.CreateUserRequest;
+import com.incdocs.model.request.UserProfileRequest;
+import com.incdocs.model.response.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static com.incdocs.utils.QueryManager.Sql.*;
 
@@ -38,6 +40,21 @@ public class UserDAO {
     @Autowired
     @Qualifier("entityDAO")
     private EntityDAO entityDAO;
+    private RowMapper<User> userRowMapper = (ResultSet resultSet, int rowCount) -> {
+        User user = new User(resultSet.getString("incdocs_id"))
+                .setName(resultSet.getString("name"))
+                .setRoleID(resultSet.getInt("role_id"))
+                .setEmpID(resultSet.getString("emp_id"))
+                .setCompanyID(resultSet.getString("company_id"))
+                .setEmailID(resultSet.getString("email_id"))
+                .setContactNumber(resultSet.getString("contact_number"))
+                .setClient(resultSet.getBoolean("is_client"))
+                .setManagerID(resultSet.getString("manager_id"))
+                .setStatus(
+                        ApplicationConstants.UserStatus.fromStatus(
+                                resultSet.getString("status")));
+        return user;
+    };
 
     public UserEntity getUserRolesActions(String id) {
         return new NamedParameterJdbcTemplate(jdbcTemplate)
@@ -64,26 +81,17 @@ public class UserDAO {
     }
 
     public User getUser(String incdocsID) {
+
         return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .queryForObject(
                         queryManager.getSQL(SEL_USER),
                         new MapSqlParameterSource("id", incdocsID),
-                        (ResultSet resultSet, int rowCount) -> {
-                            User user = new User(resultSet.getString("incdocs_id"))
-                                    .setName(resultSet.getString("name"))
-                                    .setRoleID(resultSet.getInt("role_id"))
-                                    .setEmpID(resultSet.getString("emp_id"))
-                                    .setCompanyID(resultSet.getString("company_id"))
-                                    .setEmailID(resultSet.getString("email_id"))
-                                    .setContactNumber(resultSet.getString("contact_number"))
-                                    .setClient(resultSet.getBoolean("is_client"))
-                                    .setManagerID(resultSet.getString("manager_id"))
-                                    .setStatus(
-                                            ApplicationConstants.UserStatus.fromStatus(
-                                                    resultSet.getString("status")));
-                            return user;
-                        }
+                        userRowMapper
                 );
+    }
+
+    public List<User> getAllUsers() {
+        return jdbcTemplate.query(queryManager.getSQL(SEL_ALL_USERS), userRowMapper);
     }
 
     public int modifyUserDetails(UserProfileRequest user) {

@@ -1,4 +1,4 @@
-package com.indocs.model.request;
+package com.incdocs.model.request;
 
 public class CreateCompanyRequest {
     private String id;

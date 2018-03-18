@@ -1,4 +1,4 @@
-package com.indocs.cache;
+package com.incdocs.cache;
 
 import java.util.Arrays;
 
@@ -7,6 +7,7 @@ public enum CacheName {
     USER_ENTITLEMENTS("userEntitlementCache"),
     ENTITY("entityCache"),
     ENTITY_ROLES("entityRoleCache"),
+    ROLE("roleCache"),
     ROLE_ACTIONS("roleActionCache");
 
     private String name;

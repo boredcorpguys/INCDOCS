@@ -1,7 +1,7 @@
-package com.indocs.model.response;
+package com.incdocs.model.response;
 
-import com.indocs.model.domain.Entity;
-import com.indocs.model.domain.User;
+import com.incdocs.model.domain.Entity;
+import com.incdocs.model.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;

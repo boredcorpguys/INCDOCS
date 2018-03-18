@@ -1,13 +1,13 @@
 package com.incdocs.user.helper;
 
+import com.incdocs.cache.AppCacheManager;
 import com.incdocs.entity.helper.EntityManagementHelper;
 import com.incdocs.user.dao.UserDAO;
 import com.incdocs.utils.ApplicationException;
-import com.indocs.cache.CacheName;
-import com.indocs.model.domain.User;
-import com.indocs.model.request.CreateCompanyRequest;
-import com.indocs.model.request.CreateUserRequest;
-import com.indocs.model.request.UserProfileRequest;
+import com.incdocs.cache.CacheName;
+import com.incdocs.model.domain.User;
+import com.incdocs.model.request.CreateUserRequest;
+import com.incdocs.model.request.UserProfileRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,11 +17,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 @Component("userManagementHelper")
-public class UserManagementHelper implements InitializingBean {
+public class UserManagementHelper {
     @Autowired
-    private org.springframework.cache.CacheManager cacheManager;
-
-    private Cache userCache;
+    private AppCacheManager appCacheManager;
 
     @Autowired
     @Qualifier("entityManagementHelper")
@@ -35,17 +33,14 @@ public class UserManagementHelper implements InitializingBean {
         return userManagementDAO.modifyUserDetails(user);
     }
 
-    @Cacheable(value = "userCache", key = "#incdocsID")
     public User getUser(String incdocsID) {
-        User user = null;
-        if (userCache.get(incdocsID) != null) {
-            user = (User) userCache.get(incdocsID).get();
-        } else {
-            try{
+        User user = appCacheManager.getValue(CacheName.USER, incdocsID);
+        if (user == null) {
+            try {
                 user = userManagementDAO.getUser(incdocsID);
-            }
-            catch (EmptyResultDataAccessException e) {
-                System.out.println(e.getMessage());
+                appCacheManager.put(CacheName.USER, user.getIncdocsID(), user);
+            } catch (EmptyResultDataAccessException e) {
+                // do nothing
             }
         }
         return user;
@@ -55,11 +50,8 @@ public class UserManagementHelper implements InitializingBean {
         User admin = getUser(adminID);
         createUserRequest.setCompanyID(admin.getCompanyID());
         createUserRequest.setClient(admin.isClient());
-        return userManagementDAO.createUser(createUserRequest);
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        userCache = cacheManager.getCache(CacheName.USER.getName());
+        String incdocsID = userManagementDAO.createUser(createUserRequest);
+        getUser(incdocsID); //cache it
+        return incdocsID;
     }
 }

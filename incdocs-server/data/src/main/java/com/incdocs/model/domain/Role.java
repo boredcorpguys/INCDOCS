@@ -1,4 +1,4 @@
-package com.indocs.model.domain;
+package com.incdocs.model.domain;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -6,6 +6,7 @@ public class Role {
     private final int roleID;
     private String roleName;
     private String description;
+    private boolean isClient, isActive;
 
     public Role(int roleID) {
         this.roleID = roleID;
@@ -30,6 +31,24 @@ public class Role {
 
     public Role setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public boolean isClient() {
+        return isClient;
+    }
+
+    public Role setClient(boolean client) {
+        isClient = client;
+        return this;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public Role setActive(boolean active) {
+        isActive = active;
         return this;
     }
 

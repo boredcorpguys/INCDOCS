@@ -1,4 +1,4 @@
-package com.indocs.model.domain;
+package com.incdocs.model.domain;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

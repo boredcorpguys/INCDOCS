@@ -1,12 +1,13 @@
 package com.incdocs.entity.helper;
 
+import com.incdocs.cache.AppCacheManager;
+import com.incdocs.cache.CacheName;
 import com.incdocs.entitlement.helper.EntitlementHelper;
 import com.incdocs.entity.dao.EntityDAO;
-import com.incdocs.user.helper.UserManagementHelper;
-import com.indocs.model.domain.Entity;
-import com.indocs.model.domain.Role;
-import com.indocs.model.domain.User;
-import com.indocs.model.request.CreateCompanyRequest;
+import com.incdocs.model.domain.Entity;
+import com.incdocs.model.domain.Role;
+import com.incdocs.model.request.CreateCompanyRequest;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,6 +19,10 @@ import java.util.List;
 
 @Component("entityManagementHelper")
 public class EntityManagementHelper {
+
+    @Autowired
+    private AppCacheManager appCacheManager;
+
     @Autowired
     @Qualifier("entityDAO")
     private EntityDAO entityDAO;
@@ -26,20 +31,26 @@ public class EntityManagementHelper {
     @Qualifier("entitlementHelper")
     private EntitlementHelper entitlementHelper;
 
-    @Cacheable(value = "entityCache", key = "#id")
-    public Entity getEntity(String id) {
-        Entity entity = null;
-        try {
-            entity = entityDAO.getEntity(id);
-        } catch (EmptyResultDataAccessException ex) {
-            ex.printStackTrace();
+   public Entity getEntity(String id) {
+        Entity entity = appCacheManager.getValue(CacheName.ENTITY, id);
+        if (entity == null) {
+            try {
+                entity = entityDAO.getEntity(id);
+                appCacheManager.put(CacheName.ENTITY, entity.getEntityID(), entity);
+            } catch (EmptyResultDataAccessException ex) {
+                ex.printStackTrace();
+            }
         }
         return entity;
     }
 
-    @Cacheable(value = "entityRoleCache", key = "#id")
     public List<Role> getEntityRoles(String id) {
-        return entityDAO.getEntityRoles(id);
+        List<Role> entityRoles = appCacheManager.getValue(CacheName.ENTITY_ROLES, id);
+        if (CollectionUtils.isEmpty(entityRoles)) {
+            entityRoles = entityDAO.getEntityRoles(id);
+            appCacheManager.put(CacheName.ENTITY_ROLES, id, entityRoles);
+        }
+        return entityRoles;
     }
 
     public List<Entity> getEntitiesByName(String name) {
@@ -50,6 +61,12 @@ public class EntityManagementHelper {
     public boolean createCompany(String adminID, CreateCompanyRequest createCompanyRequest) {
         int rows = entityDAO.createCompany(createCompanyRequest);
         entityDAO.createCompanyRoles(createCompanyRequest.getId(), entitlementHelper.getRoles(true));
-        return rows == 1;
+        boolean done = rows == 1;
+        if (done) {
+            //cache it
+            getEntity(createCompanyRequest.getId());
+            getEntityRoles(createCompanyRequest.getId());
+        }
+        return done;
     }
 }

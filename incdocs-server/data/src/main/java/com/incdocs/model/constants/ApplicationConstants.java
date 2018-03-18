@@ -1,4 +1,4 @@
-package com.indocs.model.constants;
+package com.incdocs.model.constants;
 
 import java.util.Arrays;
 
@@ -42,15 +42,26 @@ public class ApplicationConstants {
     }
 
     public enum Roles {
-        ADMIN,
-        GROUP_HEAD,
-        RM,
-        ARM,
-        CMO,
-        REQUESTOR,
-        APPROVER,
-        AUTH_SIGNATORY,
-        CS;
+        ADMIN(null),
+        GROUP_HEAD(1),
+        RM(2),
+        ARM(3),
+        CMO(null),
+        REQUESTOR(null),
+        APPROVER(null),
+        AUTH_SIGNATORY(null),
+        CS(null);
+
+        private Integer priority = Integer.MAX_VALUE;
+
+        Roles(Integer priority) {
+            if (priority != null)
+                this.priority = priority;
+        }
+
+        public Integer getPriority() {
+            return priority;
+        }
     }
 
     public enum UserStatus {
@@ -73,5 +84,12 @@ public class ApplicationConstants {
         public String getStatus() {
             return status;
         }
+    }
+
+    public enum BulkUploadRowTags {
+        EmployeeID,
+        Role,
+        GroupHeadID,
+        Name
     }
 }

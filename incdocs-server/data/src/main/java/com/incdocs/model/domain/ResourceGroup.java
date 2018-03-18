@@ -1,4 +1,4 @@
-package com.indocs.model.domain;
+package com.incdocs.model.domain;
 
 import java.util.ArrayList;
 import java.util.List;

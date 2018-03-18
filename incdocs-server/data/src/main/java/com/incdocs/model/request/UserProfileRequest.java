@@ -1,6 +1,6 @@
-package model.request;
+package com.incdocs.model.request;
 
-public class InputUser {
+public class UserProfileRequest {
     private String id;
     private String contactNumber;
     private String emailID;
@@ -10,7 +10,7 @@ public class InputUser {
         return id;
     }
 
-    public InputUser setId(String id) {
+    public UserProfileRequest setId(String id) {
         this.id = id;
         return this;
     }
@@ -19,7 +19,7 @@ public class InputUser {
         return contactNumber;
     }
 
-    public InputUser setContactNumber(String contactNumber) {
+    public UserProfileRequest setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
         return this;
     }
@@ -28,7 +28,7 @@ public class InputUser {
         return emailID;
     }
 
-    public InputUser setEmailID(String emailID) {
+    public UserProfileRequest setEmailID(String emailID) {
         this.emailID = emailID;
         return this;
     }
@@ -37,7 +37,7 @@ public class InputUser {
         return password;
     }
 
-    public InputUser setPassword(String password) {
+    public UserProfileRequest setPassword(String password) {
         this.password = password;
         return this;
     }

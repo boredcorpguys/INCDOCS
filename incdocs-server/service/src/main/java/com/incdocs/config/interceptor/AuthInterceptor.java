@@ -2,8 +2,7 @@ package com.incdocs.config.interceptor;
 
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
-import com.indocs.model.domain.User;
-import com.indocs.model.response.UserEntity;
+import com.incdocs.model.domain.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +14,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.indocs.model.constants.ApplicationConstants.RequestHeaders.ID;
+import static com.incdocs.model.constants.ApplicationConstants.RequestHeaders.ID;
 
 @Component("authInterceptor")
 public class AuthInterceptor extends HandlerInterceptorAdapter {
@@ -42,8 +41,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             if (ex instanceof DuplicateKeyException) {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
                 throw new ApplicationException("Duplicate value error", HttpStatus.BAD_REQUEST);
-            }
-            else
+            } else
                 throw new ApplicationException(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

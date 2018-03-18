@@ -1,7 +1,7 @@
-package com.indocs.model.domain;
+package com.incdocs.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.indocs.model.constants.ApplicationConstants;
+import com.incdocs.model.constants.ApplicationConstants;
 
 public class User {
     private final String incdocsID;

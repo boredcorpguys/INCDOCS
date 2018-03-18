@@ -14,4 +14,8 @@ public class ApplicationException extends Exception {
         super(message);
         httpStatusCode = httpStatus;
     }
+
+    public HttpStatus getHttpStatusCode() {
+        return httpStatusCode;
+    }
 }
