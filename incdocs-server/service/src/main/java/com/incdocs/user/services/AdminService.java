@@ -64,8 +64,7 @@ public class AdminService {
                                          HttpServletResponse response) throws ApplicationException {
         String fileName = "bulk-upload-mapping.xlsx";
         File file = new File(ClassLoader.getSystemResource(fileName).getFile());
-        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-        response.setContentType(mimeType);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
         response.setContentLength((int) file.length());
         try {
