@@ -7,6 +7,7 @@ import com.incdocs.utils.ApplicationException;
 import com.incdocs.model.domain.BulkUploadRow;
 import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.model.request.CreateUserRequest;
+import com.incdocs.utils.UriUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +65,7 @@ public class AdminService {
                                          HttpServletResponse response) throws ApplicationException {
         String fileName = "bulk-upload-mapping.xlsx";
         File file = new File(ClassLoader.getSystemResource(fileName).getFile());
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
-        response.setContentLength((int) file.length());
+        UriUtils.setContentHeadersForExcelFile(response, file);
         try {
             InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
             FileCopyUtils.copy(inputStream, response.getOutputStream());
@@ -95,5 +94,21 @@ public class AdminService {
         });
 
         return bulkUploadMappingProcessor.processRows(adminID, rowsUploaded);
+    }
+
+    @GetMapping(value = "/bulk/company/download")
+    public void downloadBulkCompanyInfoExcel(@RequestHeader(value = "incdocsID") String adminID,
+                                         HttpServletResponse response) throws ApplicationException {
+        String fileName = "bulk-upload-company-info.xlsx";
+        File file = new File(ClassLoader.getSystemResource(fileName).getFile());
+        UriUtils.setContentHeadersForExcelFile(response, file);
+        try {
+            InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
+        } catch (FileNotFoundException e) {
+            throw new ApplicationException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            throw new ApplicationException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }
