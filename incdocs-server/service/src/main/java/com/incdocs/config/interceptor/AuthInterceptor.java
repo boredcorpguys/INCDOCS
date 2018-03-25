@@ -1,5 +1,6 @@
 package com.incdocs.config.interceptor;
 
+import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
 import com.incdocs.model.domain.User;
@@ -13,6 +14,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.PrintWriter;
 
 import static com.incdocs.model.constants.ApplicationConstants.RequestHeaders.ID;
 
@@ -32,17 +35,25 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         }
         System.out.println("AuthInterceptor: authenticating user: " + incdocsID);
         User user = userManagementHelper.getUser(incdocsID);
-        return user != null;
+        if (user == null) {
+            throw new ApplicationException(String.format(("invalid credentials")), HttpStatus.UNAUTHORIZED);
+        }
+        if (user.getStatus() != ApplicationConstants.UserStatus.ACTIVE) {
+            throw new ApplicationException(String.format(("user not active")), HttpStatus.UNAUTHORIZED);
+        }
+        return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         if (ex != null) {
-            if (ex instanceof DuplicateKeyException) {
+            if (ex instanceof ApplicationException) {
+                response.setStatus(((ApplicationException) ex).getHttpStatusCode().value());
+            } else {
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
-                throw new ApplicationException("Duplicate value error", HttpStatus.BAD_REQUEST);
-            } else
-                throw new ApplicationException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+            PrintWriter writer = response.getWriter();
+            writer.println(String.format("HTTP Status %s : %s",String.valueOf(response.getStatus()), ex.getMessage()));
         }
     }
 }

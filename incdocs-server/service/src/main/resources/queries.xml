@@ -37,7 +37,7 @@
         <entry key="modify_user">
             <value><![CDATA[
                     UPDATE "INCDOCS"."USERS"
-                    SET "PASSWORD"=:pwd, "EMAIL_ID"=:email, "CONTACT_NUMBER"=:contact
+                    SET "PASSWORD"=:pwd, "EMAIL_ID"=:email, "CONTACT_NUMBER"=:contact, "STATUS" = 'A'
                     WHERE cast("INCDOCS_ID" as varchar)=:id
                 ]]>
             </value>
