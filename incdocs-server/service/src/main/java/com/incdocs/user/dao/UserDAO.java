@@ -50,6 +50,7 @@ public class UserDAO {
                 .setContactNumber(resultSet.getString("contact_number"))
                 .setClient(resultSet.getBoolean("is_client"))
                 .setManagerID(resultSet.getString("manager_id"))
+                .setPassword(resultSet.getString("password"))
                 .setStatus(
                         ApplicationConstants.UserStatus.fromStatus(
                                 resultSet.getString("status")));

@@ -59,7 +59,7 @@ public class AdminService {
         return userManagementHelper.createUser(adminID, userCreateRequest);
     }
 
-    @GetMapping(value = "/bulkmap/download")
+    @GetMapping(value = "/bulk/user/download")
     public void downloadBulkMappingExcel(@RequestHeader(value = "incdocsID") String adminID,
                                          HttpServletResponse response) throws ApplicationException {
         String fileName = "bulk-upload-mapping.xlsx";
@@ -78,7 +78,7 @@ public class AdminService {
         }
     }
 
-    @PostMapping(value = "/bulkmap/upload", headers = ("content-type=multipart/*"))
+    @PostMapping(value = "/bulk/user/upload", headers = ("content-type=multipart/*"))
     public List<BulkUploadRow>
     uploadBulkMappingExcel(@RequestHeader(value = "incdocsID") String adminID,
                            @RequestParam("file") MultipartFile multipartFile)

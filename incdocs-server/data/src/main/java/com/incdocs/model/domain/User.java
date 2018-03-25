@@ -1,6 +1,7 @@
 package com.incdocs.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.incdocs.model.constants.ApplicationConstants;
 
 public class User {
