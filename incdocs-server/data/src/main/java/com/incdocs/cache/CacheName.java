@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum CacheName {
     USER("userCache"),
-    USER_ENTITLEMENTS("userEntitlementCache"),
+    USER_ENTITLEMENTS("userEntitlementsCache"),
     ENTITY("entityCache"),
     ENTITY_ROLES("entityRoleCache"),
     ROLE("roleCache"),

@@ -1,6 +1,6 @@
 package com.incdocs.user.validator;
 
-import com.incdocs.entitlement.helper.EntitlementHelper;
+import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.helper.EntityManagementHelper;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
@@ -38,7 +38,7 @@ public class AdminServiceValidator {
 
     @Autowired
     @Qualifier("entitlementHelper")
-    private EntitlementHelper entitlementHelper;
+    private EntitlementManagementHelper entitlementHelper;
 
     @Before("execution(* com.incdocs.user.services.AdminService.*(..))")
     public void validateAdmin(JoinPoint joinPoint) throws ApplicationException {

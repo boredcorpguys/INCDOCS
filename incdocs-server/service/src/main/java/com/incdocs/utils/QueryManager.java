@@ -36,6 +36,7 @@ public class QueryManager implements InitializingBean {
         SEL_ROLES_FOR_ENTITY("select_roles_for_entity"),
         SEL_ENTITIES_BY_PARENT("select_entities_by_parent"),
         SEL_ENTITIES_BY_NAME("select_entities_by_name"),
+        SEL_ENTITIES_FOR_USER("select_entities_for_user"),
 
         INSERT_COMPANY("insert_company"),
         INSERT_COMPANY_ROLE("insert_company_role");

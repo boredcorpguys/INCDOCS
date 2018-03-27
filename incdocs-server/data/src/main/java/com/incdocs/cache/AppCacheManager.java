@@ -1,9 +1,6 @@
 package com.incdocs.cache;
 
-import com.incdocs.model.domain.Action;
-import com.incdocs.model.domain.Entity;
-import com.incdocs.model.domain.Role;
-import com.incdocs.model.domain.User;
+import com.incdocs.model.domain.*;
 import com.incdocs.model.response.RoleActions;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.search.Attribute;
@@ -62,6 +59,7 @@ public class AppCacheManager implements InitializingBean{
     }
 
     private TypedCache<String, User> userCache;
+    private TypedCache<String, UserEntitlement> userEntitlementsCache;
     private TypedCache<String, Entity> entityCache;
     private TypedCache<String, List<Role>> entityRoleCache;
     private TypedCache<Integer, Role> roleCache;
@@ -122,7 +120,9 @@ public class AppCacheManager implements InitializingBean{
         entityRoleCache = new TypedCache<>(cacheManager.getCache(ENTITY_ROLES.getName()));
         roleCache = new TypedCache<>(cacheManager.getCache(ROLE.getName()));
         roleActionCache = new TypedCache<>(cacheManager.getCache(ROLE_ACTIONS.getName()));
+        userEntitlementsCache = new TypedCache<>(cacheManager.getCache(USER_ENTITLEMENTS.getName()));
         appCaches.put(USER, userCache);
+        appCaches.put(USER_ENTITLEMENTS, userEntitlementsCache);
         appCaches.put(ENTITY, entityCache);
         appCaches.put(ENTITY_ROLES, entityRoleCache);
         appCaches.put(ROLE, roleCache);

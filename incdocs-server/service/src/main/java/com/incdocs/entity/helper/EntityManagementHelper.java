@@ -2,19 +2,23 @@ package com.incdocs.entity.helper;
 
 import com.incdocs.cache.AppCacheManager;
 import com.incdocs.cache.CacheName;
-import com.incdocs.entitlement.helper.EntitlementHelper;
+import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.dao.EntityDAO;
+import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.Entity;
 import com.incdocs.model.domain.Role;
+import com.incdocs.model.domain.User;
+import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.model.request.CreateCompanyRequest;
+import com.incdocs.user.helper.UserManagementHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component("entityManagementHelper")
@@ -24,12 +28,13 @@ public class EntityManagementHelper {
     private AppCacheManager appCacheManager;
 
     @Autowired
-    @Qualifier("entityDAO")
     private EntityDAO entityDAO;
 
     @Autowired
-    @Qualifier("entitlementHelper")
-    private EntitlementHelper entitlementHelper;
+    private EntitlementManagementHelper entitlementHelper;
+
+    @Autowired
+    private UserManagementHelper userManagementHelper;
 
    public Entity getEntity(String id) {
         Entity entity = appCacheManager.getValue(CacheName.ENTITY, id);

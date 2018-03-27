@@ -1,6 +1,6 @@
 package com.incdocs.utils;
 
-import com.incdocs.model.domain.BulkUploadRow;
+import com.incdocs.model.domain.BulkUploadUserRow;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Repository;
@@ -21,7 +21,7 @@ public class ExcelView extends AbstractXlsxView {
         // change the file name
         response.setHeader("Content-Disposition", "attachment; filename=\"bulk-upload-mapping.xlsx\"");
 
-        List<BulkUploadRow> rows = (List<BulkUploadRow>) model.get("bulk-upload-row");
+        List<BulkUploadUserRow> rows = (List<BulkUploadUserRow>) model.get("bulk-upload-row");
 
         // create excel xls sheet
         Sheet sheet = workbook.createSheet("Bulkooo Upload");
@@ -45,7 +45,7 @@ public class ExcelView extends AbstractXlsxView {
         header.createCell(2).setCellValue("Role");
         header.createCell(3).setCellValue("GroupHeadID");
 
-        for (BulkUploadRow row : rows) {
+        for (BulkUploadUserRow row : rows) {
             Row fauxData = sheet.createRow(1);
             fauxData.createCell(0).setCellValue(row.getEmpID());
             fauxData.createCell(1).setCellValue(row.getName());

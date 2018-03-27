@@ -4,7 +4,7 @@ import com.incdocs.entity.helper.EntityManagementHelper;
 import com.incdocs.user.helper.BulkUploadMappingProcessor;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
-import com.incdocs.model.domain.BulkUploadRow;
+import com.incdocs.model.domain.BulkUploadUserRow;
 import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.model.request.CreateUserRequest;
 import com.incdocs.utils.UriUtils;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,23 +76,22 @@ public class AdminService {
     }
 
     @PostMapping(value = "/bulk/user/upload", headers = ("content-type=multipart/*"))
-    public List<BulkUploadRow>
+    public List<BulkUploadUserRow>
     uploadBulkMappingExcel(@RequestHeader(value = "incdocsID") String adminID,
                            @RequestParam("file") MultipartFile multipartFile)
             throws IOException, ApplicationException {
         InputStream stream = multipartFile.getInputStream();
         XSSFWorkbook workbook = new XSSFWorkbook(stream);
         XSSFSheet sheet = workbook.getSheetAt(0);
-        List<BulkUploadRow> rowsUploaded = new ArrayList<>();
-        sheet.forEach(row -> {
-            rowsUploaded.add(new BulkUploadRow()
+        List<BulkUploadUserRow> rowsUploaded = new ArrayList<>();
+        sheet.forEach(row ->
+            rowsUploaded.add(new BulkUploadUserRow()
                     .setName(getCellValue(row.getCell(0)))
                     .setEmpID(getCellValue(row.getCell(1)))
                     .setGhID(getCellValue(row.getCell(2)))
-                    .setRole(getCellValue(row.getCell(3))));
-        });
+                    .setRole(getCellValue(row.getCell(3)))));
 
-        return bulkUploadMappingProcessor.processRows(adminID, rowsUploaded);
+        return bulkUploadMappingProcessor.processUserRows(adminID, rowsUploaded);
     }
 
     @GetMapping(value = "/bulk/company/download")
@@ -110,5 +108,21 @@ public class AdminService {
         } catch (IOException e) {
             throw new ApplicationException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(value = "/bulk/company/upload", headers = ("content-type=multipart/*"))
+    public void uploadBulkCompanyInfoExcel(@RequestHeader(value = "incdocsID") String adminID,
+                               @RequestParam("file") MultipartFile multipartFile)
+            throws IOException, ApplicationException {
+        InputStream stream = multipartFile.getInputStream();
+        XSSFWorkbook workbook = new XSSFWorkbook(stream);
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        List<CreateCompanyRequest> rowsToUpload = new ArrayList<>();
+        sheet.forEach(row ->
+            rowsToUpload.add(new CreateCompanyRequest()
+                    .setName(getCellValue(row.getCell(0)))
+                    .setId(getCellValue(row.getCell(1)))
+                    .setPan(getCellValue(row.getCell(2)))));
+        bulkUploadMappingProcessor.processCompanyRows(adminID, rowsToUpload);
     }
 }

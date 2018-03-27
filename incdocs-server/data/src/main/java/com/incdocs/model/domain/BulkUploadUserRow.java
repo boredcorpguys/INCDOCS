@@ -2,7 +2,7 @@ package com.incdocs.model.domain;
 
 import com.incdocs.model.constants.ApplicationConstants;
 
-public class BulkUploadRow implements Comparable<BulkUploadRow> {
+public class BulkUploadUserRow implements Comparable<BulkUploadUserRow> {
     private String empID;
     private String role;
     private String ghID;
@@ -13,7 +13,7 @@ public class BulkUploadRow implements Comparable<BulkUploadRow> {
         return name;
     }
 
-    public BulkUploadRow setName(String name) {
+    public BulkUploadUserRow setName(String name) {
         this.name = name;
         return this;
     }
@@ -22,7 +22,7 @@ public class BulkUploadRow implements Comparable<BulkUploadRow> {
         return empID;
     }
 
-    public BulkUploadRow setEmpID(String empID) {
+    public BulkUploadUserRow setEmpID(String empID) {
         this.empID = empID;
         return this;
     }
@@ -31,7 +31,7 @@ public class BulkUploadRow implements Comparable<BulkUploadRow> {
         return role;
     }
 
-    public BulkUploadRow setRole(String role) {
+    public BulkUploadUserRow setRole(String role) {
         this.role = role;
         return this;
     }
@@ -40,7 +40,7 @@ public class BulkUploadRow implements Comparable<BulkUploadRow> {
         return ghID;
     }
 
-    public BulkUploadRow setGhID(String ghID) {
+    public BulkUploadUserRow setGhID(String ghID) {
         this.ghID = ghID;
         return this;
     }
@@ -49,13 +49,13 @@ public class BulkUploadRow implements Comparable<BulkUploadRow> {
         return errorStatus;
     }
 
-    public BulkUploadRow setErrorStatus(String errorStatus) {
+    public BulkUploadUserRow setErrorStatus(String errorStatus) {
         this.errorStatus = errorStatus;
         return this;
     }
 
     @Override
-    public int compareTo(BulkUploadRow o) {
+    public int compareTo(BulkUploadUserRow o) {
         Integer thisRolePriority = ApplicationConstants.Roles.valueOf(this.getRole()).getPriority();
         Integer thatRolePriority = ApplicationConstants.Roles.valueOf(o.getRole()).getPriority();
         return thisRolePriority.compareTo(thatRolePriority);

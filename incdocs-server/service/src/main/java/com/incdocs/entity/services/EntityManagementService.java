@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/incdocs/org")
+@RequestMapping("/incdocs/company")
 public class EntityManagementService {
 
     @Autowired

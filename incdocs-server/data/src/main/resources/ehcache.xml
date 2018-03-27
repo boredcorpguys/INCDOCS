@@ -18,6 +18,19 @@
         </searchable>
     </cache>
 
+    <cache name="userEntitlementsCache"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToLiveSeconds="300"
+           timeToIdleSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <searchable>
+            <searchAttribute name="company_id" expression="value.getCompanyID()"/>
+        </searchable>
+    </cache>
+
     <cache name="entityCache"
            maxElementsInMemory="100"
            eternal="false"

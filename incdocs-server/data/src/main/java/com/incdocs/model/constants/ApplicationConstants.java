@@ -92,4 +92,10 @@ public class ApplicationConstants {
         GroupHeadID,
         Name
     }
+
+    public enum BulkUploadCompanyRowTags {
+        Name,
+        CompanyID,
+        Pan
+    }
 }

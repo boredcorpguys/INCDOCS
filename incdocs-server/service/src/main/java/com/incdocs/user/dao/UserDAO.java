@@ -2,6 +2,7 @@ package com.incdocs.user.dao;
 
 import com.incdocs.entitlement.dao.EntitlementDAO;
 import com.incdocs.entity.dao.EntityDAO;
+import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.utils.QueryManager;
 import com.incdocs.utils.Utils;
 import com.incdocs.model.constants.ApplicationConstants;
@@ -118,5 +119,15 @@ public class UserDAO {
                         userCreateRequest.getGhID()
                 });
         return incdocsID;
+    }
+
+    public UserEntitlement getUserEntitlements(String incdocsID) {
+        SqlParameterSource params = new MapSqlParameterSource("id", incdocsID);
+        List<String> entities = new NamedParameterJdbcTemplate(jdbcTemplate)
+                .query(queryManager.getSQL(SEL_USER_ENTITLEMENTS),
+                        params, (resultSet, i) -> {
+                            return resultSet.getString("entity_id");
+                        });
+        return new UserEntitlement().setUserID(incdocsID).addEntities(entities);
     }
 }

@@ -1,16 +1,15 @@
 package com.incdocs.user.helper;
 
-import com.incdocs.entitlement.helper.EntitlementHelper;
+import com.incdocs.entitlement.helper.EntitlementManagementHelper;
+import com.incdocs.model.constants.ApplicationConstants;
+import com.incdocs.model.domain.BulkUploadUserRow;
 import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
+import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.model.request.CreateUserRequest;
 import com.incdocs.user.services.AdminService;
 import com.incdocs.utils.ApplicationException;
-import com.incdocs.model.constants.ApplicationConstants;
-import com.incdocs.model.domain.BulkUploadRow;
-import com.incdocs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -28,13 +27,13 @@ public class BulkUploadMappingProcessor {
     private AdminService adminService;
 
     @Autowired
-    @Qualifier("entitlementHelper")
-    private EntitlementHelper entitlementHelper;
+    private EntitlementManagementHelper entitlementManagementHelper;
 
     @Autowired
     private UserManagementHelper userManagementHelper;
 
-    public List<BulkUploadRow> processRows(String adminID, List<BulkUploadRow> rows) throws ApplicationException {
+
+    public List<BulkUploadUserRow> processUserRows(String adminID, List<BulkUploadUserRow> rows) throws ApplicationException {
         if (rows.isEmpty()) {
             throw new ApplicationException("Empty excel", HttpStatus.BAD_REQUEST);
         }
@@ -43,7 +42,7 @@ public class BulkUploadMappingProcessor {
                 .map(constant -> constant.name())
                 .collect(Collectors.toList());
 
-        BulkUploadRow header = rows.remove(0);
+        BulkUploadUserRow header = rows.remove(0);
         boolean headerVerified = tags.stream()
                 .allMatch(tag -> tag.equals(header.getName())
                         || tag.equals(header.getEmpID())
@@ -57,12 +56,12 @@ public class BulkUploadMappingProcessor {
             throw new ApplicationException("Excel has no mapping data", HttpStatus.BAD_REQUEST);
         }
 
-        List<BulkUploadRow> errorRows = new ArrayList<>();
+        List<BulkUploadUserRow> errorRows = new ArrayList<>();
 
-        Role ghRole = entitlementHelper.getRole(ApplicationConstants.Roles.GROUP_HEAD);
+        Role ghRole = entitlementManagementHelper.getRole(ApplicationConstants.Roles.GROUP_HEAD);
 
-        List<BulkUploadRow> ghRows = new ArrayList<>();
-        List<BulkUploadRow> nonGhRows = new ArrayList<>();
+        List<BulkUploadUserRow> ghRows = new ArrayList<>();
+        List<BulkUploadUserRow> nonGhRows = new ArrayList<>();
 
         rows.stream()
                 .forEach(row -> {
@@ -75,17 +74,17 @@ public class BulkUploadMappingProcessor {
         User admin = userManagementHelper.getUser(adminID);
         ghRows.forEach(createUserConsumer(admin, errorRows, ghRole));
         nonGhRows.forEach(row -> {
-            Role currRole = entitlementHelper.getRole(ApplicationConstants.Roles.valueOf(row.getRole()));
+            Role currRole = entitlementManagementHelper.getRole(ApplicationConstants.Roles.valueOf(row.getRole()));
             createUserConsumer(admin, errorRows, currRole).accept(row);
         });
 
         return errorRows;
     }
 
-    private Predicate<BulkUploadRow> checkGHPredicate(Role ghRole) {
+    private Predicate<BulkUploadUserRow> checkGHPredicate(Role ghRole) {
         return row -> {
             try {
-                Role currRole = entitlementHelper.getRole(ApplicationConstants.Roles.valueOf(row.getRole()));
+                Role currRole = entitlementManagementHelper.getRole(ApplicationConstants.Roles.valueOf(row.getRole()));
                 return currRole.getRoleID() == ghRole.getRoleID();
             } catch (Exception e) {
                 return false;
@@ -93,7 +92,7 @@ public class BulkUploadMappingProcessor {
         };
     }
 
-    private Consumer<BulkUploadRow> createUserConsumer(User admin, List<BulkUploadRow> errorRows, Role role) {
+    private Consumer<BulkUploadUserRow> createUserConsumer(User admin, List<BulkUploadUserRow> errorRows, Role role) {
         return rowToInsert -> {
             CreateUserRequest createUserRequest = new CreateUserRequest()
                     .setRoleID(role.getRoleID())
@@ -109,5 +108,12 @@ public class BulkUploadMappingProcessor {
                }
             }
         };
+    }
+
+    public void processCompanyRows(String adminID, List<CreateCompanyRequest> rowsToUpload)
+            throws ApplicationException {
+        if (rowsToUpload.isEmpty()) {
+            throw new ApplicationException("Empty excel", HttpStatus.BAD_REQUEST);
+        }
     }
 }

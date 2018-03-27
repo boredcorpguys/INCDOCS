@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component("entitlementHelper")
-public class EntitlementHelper {
+public class EntitlementManagementHelper {
     @Autowired
     private AppCacheManager appCacheManager;
 

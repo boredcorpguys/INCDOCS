@@ -1,6 +1,6 @@
 package com.incdocs.entitlement.services;
 
-import com.incdocs.entitlement.helper.EntitlementHelper;
+import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
 import com.incdocs.model.domain.Role;
@@ -18,7 +18,7 @@ public class EntitlementManagementService {
 
     @Autowired
     @Qualifier("entitlementHelper")
-    private EntitlementHelper entitlementHelper;
+    private EntitlementManagementHelper entitlementHelper;
 
     @Autowired
     @Qualifier("userManagementHelper")

@@ -11,11 +11,9 @@
     <util:map id="queryMap">
         <entry key="select_user_entitlement">
             <value><![CDATA[
-                    SELECT "NAME", "INCDOCS_ID", "EMP_ID", "MANAGER_ID", "ROLE_ID", "EMAIL_ID", "COMPANY_ID", "ENTITY_ID", "IS_CLIENT", "STATUS"
-                    FROM "INCDOCS"."USERS" u
-                    inner join "INCDOCS"."USER_ENTITLEMENTS" e
-                    on u."INCDOCS_ID" = e."USER_ID"
-                    where cast(u."INCDOCS_ID" as varchar)=:id
+                    SELECT *
+                    FROM "INCDOCS"."USER_ENTITLEMENTS" e
+                    where e."USER_ID" = :id
                 ]]>
             </value>
         </entry>
@@ -85,6 +83,17 @@
                     from entities e
                     left join group_head h
                     on e."ID" = h."ENTITY_ID"
+                ]]>
+            </value>
+        </entry>
+        <entry key="select_entities_for_user">
+            <value>
+                <![CDATA[
+                    select e.*
+                    from  "INCDOCS"."USER_ENTITLEMENTS" ue
+                    inner join "INCDOCS"."ENTITIES" e
+                    on ue."ENTITY_ID" = e."ID"
+                    where ue."USER_ID" = :id
                 ]]>
             </value>
         </entry>
