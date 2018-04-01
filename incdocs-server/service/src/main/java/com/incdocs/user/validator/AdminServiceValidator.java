@@ -97,11 +97,19 @@ public class AdminServiceValidator {
         validate(createCompanyRequest.getId(), "id");
         validate(createCompanyRequest.getName(), "name");
         validate(createCompanyRequest.getPan(), "pan");
+        validate(createCompanyRequest.getGhID(), "group head id");
         Entity entity = entityManagementHelper.getEntity(createCompanyRequest.getId());
         if (entity != null) {
             throw new ApplicationException(String.format("Company: %s is already setup in system",
                     createCompanyRequest.getName()),
                     HttpStatus.CONFLICT);
         }
+        User groupHead = userManagementHelper.getUserByEmpID(createCompanyRequest.getGhID());
+        if (groupHead == null) {
+            throw new ApplicationException(String.format("group head id: %s, is not configured in system",
+                    createCompanyRequest.getGhID()),
+                    HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

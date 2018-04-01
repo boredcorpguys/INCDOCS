@@ -17,6 +17,14 @@
                 ]]>
             </value>
         </entry>
+        <entry key="insert_user_entitlement">
+            <value><![CDATA[
+                    INSERT INTO "INCDOCS"."USER_ENTITLEMENTS"(
+                    "USER_ID", "ENTITY_ID", "IS_ACTIVE")
+                    VALUES (?, ?, true)
+                ]]>
+            </value>
+        </entry>
         <entry key="select_user">
             <value><![CDATA[
                     SELECT *

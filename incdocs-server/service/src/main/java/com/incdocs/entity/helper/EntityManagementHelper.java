@@ -62,16 +62,15 @@ public class EntityManagementHelper {
         return entityDAO.getEntityByName(name);
     }
 
-    @Transactional
-    public boolean createCompany(String adminID, CreateCompanyRequest createCompanyRequest) {
+
+    public int createCompany(String adminID, CreateCompanyRequest createCompanyRequest) {
         int rows = entityDAO.createCompany(createCompanyRequest);
         entityDAO.createCompanyRoles(createCompanyRequest.getId(), entitlementHelper.getRoles(true));
-        boolean done = rows == 1;
-        if (done) {
+        if (rows == 1) {
             //cache it
             getEntity(createCompanyRequest.getId());
             getEntityRoles(createCompanyRequest.getId());
         }
-        return done;
+        return rows;
     }
 }

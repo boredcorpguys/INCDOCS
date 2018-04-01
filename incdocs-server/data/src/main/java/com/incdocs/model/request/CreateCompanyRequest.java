@@ -4,6 +4,7 @@ public class CreateCompanyRequest {
     private String id;
     private String name;
     private String pan;
+    private String ghID;
     private boolean isClient;
 
     public boolean isClient() {
@@ -39,6 +40,15 @@ public class CreateCompanyRequest {
 
     public CreateCompanyRequest setPan(String pan) {
         this.pan = pan;
+        return this;
+    }
+
+    public String getGhID() {
+        return ghID;
+    }
+
+    public CreateCompanyRequest setGhID(String ghID) {
+        this.ghID = ghID;
         return this;
     }
 }

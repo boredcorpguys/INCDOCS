@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,15 @@ public class AdminService {
     private BulkUploadMappingProcessor bulkUploadMappingProcessor;
 
     @PostMapping("/create/company")
+    @Transactional
     public boolean createCompany(@RequestHeader(value = "incdocsID") String adminID,
                                  @RequestBody CreateCompanyRequest createCompanyRequest)
             throws ApplicationException {
-        return entityManagementHelper.createCompany(adminID, createCompanyRequest);
+        int companyRowCount = entityManagementHelper.createCompany(adminID, createCompanyRequest);
+        int userEntitlementRowCount = userManagementHelper
+                .createUserEntitlement(createCompanyRequest.getGhID(),
+                        createCompanyRequest.getId());
+        return (companyRowCount == 1 && userEntitlementRowCount == 1);
     }
 
     @PostMapping("/create/user")

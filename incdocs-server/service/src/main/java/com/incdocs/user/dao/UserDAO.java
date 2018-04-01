@@ -130,4 +130,12 @@ public class UserDAO {
                         });
         return new UserEntitlement().setUserID(incdocsID).addEntities(entities);
     }
+
+    public int createUserEntitlement(String incdocsID, String entityID) {
+        return jdbcTemplate.update(queryManager.getSQL(INS_USER_ENTITLEMENTS),
+                new Object[]{
+                    incdocsID,
+                    entityID
+                });
+    }
 }

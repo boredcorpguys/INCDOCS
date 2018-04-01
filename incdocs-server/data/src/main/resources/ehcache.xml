@@ -15,6 +15,7 @@
            transactionalMode="off">
         <searchable>
             <searchAttribute name="company_id" expression="value.getCompanyID()"/>
+            <searchAttribute name="emp_id" expression="value.getEmpID()"/>
         </searchable>
     </cache>
 
