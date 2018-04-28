@@ -1,10 +1,10 @@
 package com.incdocs.user.services;
 
 import com.incdocs.model.domain.Entity;
-import com.incdocs.user.helper.UserManagementHelper;
-import com.incdocs.utils.ApplicationException;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.request.UserProfileRequest;
+import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;

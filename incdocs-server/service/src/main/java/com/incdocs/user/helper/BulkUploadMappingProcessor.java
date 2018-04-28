@@ -102,10 +102,10 @@ public class BulkUploadMappingProcessor {
             try {
                 adminService.createUser(admin.getIncdocsID(), createUserRequest);
             } catch (ApplicationException e) {
-               if (e.getHttpStatusCode() == HttpStatus.BAD_REQUEST) {
-                   rowToInsert.setErrorStatus(e.getMessage());
-                   errorRows.add(rowToInsert);
-               }
+                if (e.getHttpStatusCode() == HttpStatus.BAD_REQUEST) {
+                    rowToInsert.setErrorStatus(e.getMessage());
+                    errorRows.add(rowToInsert);
+                }
             }
         };
     }

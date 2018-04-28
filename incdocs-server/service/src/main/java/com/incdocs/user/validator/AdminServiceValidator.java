@@ -2,9 +2,6 @@ package com.incdocs.user.validator;
 
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.helper.EntityManagementHelper;
-import com.incdocs.user.helper.UserManagementHelper;
-import com.incdocs.utils.ApplicationException;
-import com.incdocs.utils.Utils;
 import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.Entity;
 import com.incdocs.model.domain.Role;
@@ -12,9 +9,14 @@ import com.incdocs.model.domain.User;
 import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.model.request.CreateUserRequest;
 import com.incdocs.model.response.RoleActions;
+import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
+import com.incdocs.utils.Utils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ import static com.incdocs.utils.Utils.validate;
 @Aspect
 @Component
 public class AdminServiceValidator {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminServiceValidator.class);
 
     @Autowired
     @Qualifier("userManagementHelper")
@@ -47,7 +51,7 @@ public class AdminServiceValidator {
         RoleActions roleActions = entitlementHelper.getActionsForRole(admin.getRoleID());
         if (roleActions == null || !roleActions.getRole().getRoleName()
                 .equals(ApplicationConstants.Roles.ADMIN.name())) {
-            throw new ApplicationException(String.format("%s is not authorized to make this request",incdocsID),
+            throw new ApplicationException(String.format("%s is not authorized to make this request", incdocsID),
                     HttpStatus.UNAUTHORIZED);
         }
     }
@@ -55,7 +59,7 @@ public class AdminServiceValidator {
     @Before("execution(* com.incdocs.user.services.AdminService.createUser(..))")
     public void validateCreateUserOperation(JoinPoint joinPoint) throws ApplicationException {
 
-        System.out.println("validating create user operation with args");
+        logger.debug("validating create user operation with args");
         String incdocsID = (String) joinPoint.getArgs()[0];
         CreateUserRequest userCreateRequest = (CreateUserRequest) joinPoint.getArgs()[1];
 
@@ -92,7 +96,7 @@ public class AdminServiceValidator {
 
     @Before("execution(* com.incdocs.user.services.AdminService.createCompany(..))")
     public void validateCreateCompanyRequest(JoinPoint joinPoint) throws ApplicationException {
-        System.out.println("validating create company operation with args");
+        logger.debug("validating create company operation with args");
         CreateCompanyRequest createCompanyRequest = (CreateCompanyRequest) joinPoint.getArgs()[1];
         validate(createCompanyRequest.getId(), "id");
         validate(createCompanyRequest.getName(), "name");

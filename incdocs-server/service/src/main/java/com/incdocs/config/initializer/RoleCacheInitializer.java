@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class RoleCacheInitializer implements InitializingBean{
+public class RoleCacheInitializer implements InitializingBean {
     @Autowired
     private AppCacheManager appCacheManager;
 

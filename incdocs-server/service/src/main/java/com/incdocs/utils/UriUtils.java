@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class UriUtils {
-    private static final String INCDOCS_ID = "incdocsID";
     public static final String excelContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    private static final String INCDOCS_ID = "incdocsID";
 
     static public final String[] userDetailsFromAuthHeader(HttpServletRequest request)
-            throws ApplicationException{
+            throws ApplicationException {
         String authorization = request.getHeader("Authorization");
-        String [] authParts = authorization.split("\\s+");
+        String[] authParts = authorization.split("\\s+");
         String authInfo = authParts[1];
         byte[] bytes = null;
         try {
@@ -30,15 +30,16 @@ public class UriUtils {
 
     static public final String userIdFromAuthHeader(HttpServletRequest request)
             throws ApplicationException {
-        String [] authDetails = userDetailsFromAuthHeader(request);
+        String[] authDetails = userDetailsFromAuthHeader(request);
         return authDetails[0];
     }
-    static public void createErrorResponse (HttpServletResponse response, HttpStatus status, String message) {
+
+    static public void createErrorResponse(HttpServletResponse response, HttpStatus status, String message) {
         response.setStatus(status.value());
         PrintWriter writer = null;
         try {
             writer = response.getWriter();
-            writer.println(String.format("HTTP Status %s : %s",String.valueOf(response.getStatus()), message));
+            writer.println(String.format("HTTP Status %s : %s", String.valueOf(response.getStatus()), message));
         } catch (IOException e) {
 
         }

@@ -1,23 +1,18 @@
 package com.incdocs.entitlement.helper;
 
 import com.incdocs.cache.AppCacheManager;
+import com.incdocs.cache.CacheName;
 import com.incdocs.cache.CacheSearchAttributes;
 import com.incdocs.entitlement.dao.EntitlementDAO;
-import com.incdocs.cache.CacheName;
 import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.Action;
 import com.incdocs.model.domain.Role;
 import com.incdocs.model.response.RoleActions;
-import com.incdocs.utils.ApplicationException;
 import net.sf.ehcache.search.Attribute;
 import net.sf.ehcache.search.expression.Criteria;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

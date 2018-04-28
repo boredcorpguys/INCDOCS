@@ -1,5 +1,7 @@
 package com.incdocs.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +10,8 @@ import java.util.Map;
 
 @Component("queryManager")
 public class QueryManager implements InitializingBean {
+    private static final Logger logger = LoggerFactory.getLogger(QueryManager.class);
+
     @Resource(name = "queryMap")
     private Map<String, String> queryMap;
 
@@ -17,7 +21,7 @@ public class QueryManager implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println(queryMap);
+        logger.debug(String.valueOf(queryMap));
     }
 
     public enum Sql {

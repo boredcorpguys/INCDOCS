@@ -1,8 +1,8 @@
 package com.incdocs.entitlement.dao;
 
-import com.incdocs.utils.QueryManager;
 import com.incdocs.model.domain.Action;
 import com.incdocs.model.domain.Role;
+import com.incdocs.utils.QueryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,14 +41,14 @@ public class EntitlementDAO {
     }
 
     public List<Action> getActionsForRole(int roleID) {
-        return  new NamedParameterJdbcTemplate(jdbcTemplate)
+        return new NamedParameterJdbcTemplate(jdbcTemplate)
                 .query(
                         queryManager.getSQL(SEL_ACTIONS_FOR_ROLE),
                         new MapSqlParameterSource("id", roleID),
                         (resultSet, rowCount) ->
-                            new Action(resultSet.getInt("action_id"))
+                                new Action(resultSet.getInt("action_id"))
                                         .setActionName(resultSet.getString("action_name"))
-                                        .setDescription(resultSet.getString("action_desc")) );
+                                        .setDescription(resultSet.getString("action_desc")));
     }
 
     public List<Role> getAllRoles() {

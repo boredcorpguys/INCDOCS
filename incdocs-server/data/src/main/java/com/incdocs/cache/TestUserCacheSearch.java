@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.util.List;
 
 @Component
-public class TestUserCacheSearch implements InitializingBean{
+public class TestUserCacheSearch implements InitializingBean {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

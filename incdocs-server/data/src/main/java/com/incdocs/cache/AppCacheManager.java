@@ -1,7 +1,6 @@
 package com.incdocs.cache;
 
 import com.incdocs.model.domain.*;
-import com.incdocs.model.response.RoleActions;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.search.Attribute;
 import net.sf.ehcache.search.Query;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,42 +20,11 @@ import static com.incdocs.cache.CacheName.*;
 
 
 @Component("appCacheManager")
-public class AppCacheManager implements InitializingBean{
+public class AppCacheManager implements InitializingBean {
     @Autowired
     private org.springframework.cache.CacheManager cacheManager;
 
     private Map<CacheName, TypedCache> appCaches = new HashMap<>();
-
-    class TypedCache<K, V> {
-        private final Cache cache;
-
-        public TypedCache(Cache cache) {
-            this.cache = cache;
-        }
-
-        public V getValue(K key) {
-            Cache.ValueWrapper val = cache.get(key);
-            return (val != null ? (V) val.get(): null);
-        }
-
-        public void put(K key, V value) {
-            cache.put(key, value);
-        }
-
-        public V putIfAbsent(K key, V value) {
-            Cache.ValueWrapper  val = cache.putIfAbsent(key, value);
-            return (val !=null ? (V) val.get(): null);
-        }
-
-        public void evict(K key) {
-            cache.evict(key);
-        }
-
-        public Ehcache getNativeCache() {
-            return (Ehcache)cache.getNativeCache();
-        }
-    }
-
     private TypedCache<String, User> userCache;
     private TypedCache<String, UserEntitlement> userEntitlementsCache;
     private TypedCache<String, Entity> entityCache;
@@ -65,12 +32,12 @@ public class AppCacheManager implements InitializingBean{
     private TypedCache<Integer, Role> roleCache;
     private TypedCache<Integer, List<Action>> roleActionCache;
 
-    public <K,V> V getValue(CacheName cacheName, K key) {
+    public <K, V> V getValue(CacheName cacheName, K key) {
         TypedCache<K, V> typedCache = getTypedCache(cacheName);
         return typedCache.getValue(key);
     }
 
-    public <K,V> void put(CacheName cacheName, K key, V value) {
+    public <K, V> void put(CacheName cacheName, K key, V value) {
         TypedCache<K, V> typedCache = getTypedCache(cacheName);
         typedCache.put(key, value);
     }
@@ -87,13 +54,13 @@ public class AppCacheManager implements InitializingBean{
 
     public <K, V> TypedCache<K, V> getTypedCache(CacheName cacheName) {
         TypedCache<K, V> typedCache = appCaches.get(cacheName);
-        if (typedCache ==  null) {
-            throw new RuntimeException("No Such cache = "+cacheName);
+        if (typedCache == null) {
+            throw new RuntimeException("No Such cache = " + cacheName);
         }
         return typedCache;
     }
 
-    public <V,T> List<V>
+    public <V, T> List<V>
     queryCacheValues(CacheName cacheName, Criteria criteria) {
         Ehcache cache = getTypedCache(cacheName).getNativeCache();
         Query query = cache.createQuery()
@@ -127,5 +94,35 @@ public class AppCacheManager implements InitializingBean{
         appCaches.put(ENTITY_ROLES, entityRoleCache);
         appCaches.put(ROLE, roleCache);
         appCaches.put(ROLE_ACTIONS, roleActionCache);
+    }
+
+    class TypedCache<K, V> {
+        private final Cache cache;
+
+        public TypedCache(Cache cache) {
+            this.cache = cache;
+        }
+
+        public V getValue(K key) {
+            Cache.ValueWrapper val = cache.get(key);
+            return (val != null ? (V) val.get() : null);
+        }
+
+        public void put(K key, V value) {
+            cache.put(key, value);
+        }
+
+        public V putIfAbsent(K key, V value) {
+            Cache.ValueWrapper val = cache.putIfAbsent(key, value);
+            return (val != null ? (V) val.get() : null);
+        }
+
+        public void evict(K key) {
+            cache.evict(key);
+        }
+
+        public Ehcache getNativeCache() {
+            return (Ehcache) cache.getNativeCache();
+        }
     }
 }

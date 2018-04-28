@@ -1,11 +1,11 @@
 package com.incdocs.entitlement.services;
 
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
-import com.incdocs.user.helper.UserManagementHelper;
-import com.incdocs.utils.ApplicationException;
 import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.response.RoleActions;
+import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;

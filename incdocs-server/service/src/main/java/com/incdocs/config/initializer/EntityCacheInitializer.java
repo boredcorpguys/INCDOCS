@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component("entityCacheInitializer")
-public class EntityCacheInitializer implements InitializingBean{
+public class EntityCacheInitializer implements InitializingBean {
 
     @Autowired
     private AppCacheManager appCacheManager;

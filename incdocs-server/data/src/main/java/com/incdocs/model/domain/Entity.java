@@ -16,6 +16,17 @@ public class Entity {
 
     private String groupHeadID;
 
+    private String pan;
+
+    public String getPan() {
+        return pan;
+    }
+
+    public Entity setPan(String pan) {
+        this.pan = pan;
+        return this;
+    }
+
     public Entity(String entityID) {
         this.entityID = entityID;
     }

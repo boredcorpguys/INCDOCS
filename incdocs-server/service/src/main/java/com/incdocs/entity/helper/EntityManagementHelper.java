@@ -2,23 +2,19 @@ package com.incdocs.entity.helper;
 
 import com.incdocs.cache.AppCacheManager;
 import com.incdocs.cache.CacheName;
+import com.incdocs.cache.CacheSearchAttributes;
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.dao.EntityDAO;
-import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.Entity;
 import com.incdocs.model.domain.Role;
-import com.incdocs.model.domain.User;
-import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.user.helper.UserManagementHelper;
+import net.sf.ehcache.search.Attribute;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component("entityManagementHelper")
@@ -36,7 +32,7 @@ public class EntityManagementHelper {
     @Autowired
     private UserManagementHelper userManagementHelper;
 
-   public Entity getEntity(String id) {
+    public Entity getEntity(String id) {
         Entity entity = appCacheManager.getValue(CacheName.ENTITY, id);
         if (entity == null) {
             try {
@@ -59,9 +55,19 @@ public class EntityManagementHelper {
     }
 
     public List<Entity> getEntitiesByName(String name) {
-        return entityDAO.getEntityByName(name);
+        Attribute<String> idSearchAttr = appCacheManager.createSearchAttribute(CacheName.ENTITY,
+                CacheSearchAttributes.company_name);
+        String regex = "*"+name+"*";
+        List<Entity> entities = appCacheManager.queryCacheValues(CacheName.ENTITY, idSearchAttr.ilike(regex));
+        return entities;
     }
 
+    public List<Entity> getEntitiesByPan(String pan) {
+        Attribute<String> idSearchAttr = appCacheManager.createSearchAttribute(CacheName.ENTITY,
+                CacheSearchAttributes.company_pan);
+        List<Entity> entities = appCacheManager.queryCacheValues(CacheName.ENTITY, idSearchAttr.eq(pan));
+        return entities;
+    }
 
     public int createCompany(String adminID, CreateCompanyRequest createCompanyRequest) {
         int rows = entityDAO.createCompany(createCompanyRequest);

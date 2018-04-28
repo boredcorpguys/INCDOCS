@@ -1,9 +1,9 @@
 package com.incdocs.entity.dao;
 
-import com.incdocs.utils.QueryManager;
 import com.incdocs.model.domain.Entity;
 import com.incdocs.model.domain.Role;
 import com.incdocs.model.request.CreateCompanyRequest;
+import com.incdocs.utils.QueryManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +34,8 @@ public class EntityDAO {
         Entity parent = new Entity(resultSet.getString("id"))
                 .setName(resultSet.getString("name"))
                 .setParentID(resultSet.getString("parent_id"))
-                .setGroupHeadID(resultSet.getString("gh_id"));
+                .setGroupHeadID(resultSet.getString("gh_id"))
+                .setPan(resultSet.getString("pan"));
 
         if (parent.getParentID() == null) {
             getChildEntities(parent.getEntityID())
@@ -65,6 +66,7 @@ public class EntityDAO {
                                 .setName(resultSet.getString("name"))
                                 .setParentID(resultSet.getString("parent_id"))
                                 .setGroupHeadID(resultSet.getString("gh_id"))
+                                .setPan(resultSet.getString("pan"))
                 );
     }
 

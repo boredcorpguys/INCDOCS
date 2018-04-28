@@ -1,28 +1,22 @@
 package com.incdocs.user.helper;
 
 import com.incdocs.cache.AppCacheManager;
+import com.incdocs.cache.CacheName;
 import com.incdocs.cache.CacheSearchAttributes;
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
-import com.incdocs.entity.dao.EntityDAO;
 import com.incdocs.entity.helper.EntityManagementHelper;
 import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.Entity;
 import com.incdocs.model.domain.Role;
-import com.incdocs.model.domain.UserEntitlement;
-import com.incdocs.user.dao.UserDAO;
-import com.incdocs.utils.ApplicationException;
-import com.incdocs.cache.CacheName;
 import com.incdocs.model.domain.User;
+import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.model.request.CreateUserRequest;
 import com.incdocs.model.request.UserProfileRequest;
-import com.incdocs.utils.Utils;
+import com.incdocs.user.dao.UserDAO;
+import com.incdocs.utils.ApplicationException;
 import net.sf.ehcache.search.Attribute;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 

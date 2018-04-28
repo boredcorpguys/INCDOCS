@@ -13,15 +13,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Date;
 
 @ControllerAdvice
-public class FaultHandler extends ResponseEntityExceptionHandler{
-    @ExceptionHandler(value = { ApplicationException.class })
+public class FaultHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(value = {ApplicationException.class})
     protected ResponseEntity<Object> handleApplicationExceptions(ApplicationException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(new Date(), ex.getMessage());
         return handleExceptionInternal(ex, errorResponse,
                 new HttpHeaders(), ex.getHttpStatusCode(), request);
     }
 
-    @ExceptionHandler(value = { Exception.class })
+    @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(new Date(), ex.getMessage());
 

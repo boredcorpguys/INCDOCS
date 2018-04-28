@@ -1,13 +1,15 @@
 package com.incdocs.entity.services;
 
 import com.incdocs.entity.helper.EntityManagementHelper;
-import com.incdocs.user.helper.UserManagementHelper;
-import com.incdocs.utils.ApplicationException;
 import com.incdocs.model.domain.Entity;
 import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
+import com.incdocs.user.helper.UserManagementHelper;
+import com.incdocs.utils.ApplicationException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,8 +47,14 @@ public class EntityManagementService {
      */
     @GetMapping("/search")
     public @ResponseBody
-    List<Entity> getEntitiesByName(@RequestParam(value = "name", required = true) String name) {
-        return entityManagementHelper.getEntitiesByName(name);
+    List<Entity> getEntitiesByName(@RequestParam(value = "name", required = false) String name,
+                                   @RequestParam(value = "pan", required = false) String pan) throws ApplicationException {
+        if (StringUtils.isEmpty(name) && StringUtils.isEmpty(pan))
+            throw new ApplicationException("query param should provide either name or pan", HttpStatus.BAD_REQUEST);
+        if (StringUtils.isNotEmpty(name))
+            return entityManagementHelper.getEntitiesByName(name);
+        else
+            return entityManagementHelper.getEntitiesByPan(pan);
     }
 
     /**

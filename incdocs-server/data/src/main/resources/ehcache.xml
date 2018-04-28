@@ -40,6 +40,10 @@
            timeToIdleSeconds="0"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
+        <searchable>
+            <searchAttribute name="company_name" expression="value.getName()"/>
+            <searchAttribute name="company_pan" expression="value.getPan()"/>
+        </searchable>
     </cache>
 
     <cache name="entityRoleCache"

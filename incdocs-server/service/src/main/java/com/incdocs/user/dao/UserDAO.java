@@ -2,14 +2,14 @@ package com.incdocs.user.dao;
 
 import com.incdocs.entitlement.dao.EntitlementDAO;
 import com.incdocs.entity.dao.EntityDAO;
-import com.incdocs.model.domain.UserEntitlement;
-import com.incdocs.utils.QueryManager;
-import com.incdocs.utils.Utils;
 import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.User;
+import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.model.request.CreateUserRequest;
 import com.incdocs.model.request.UserProfileRequest;
 import com.incdocs.model.response.UserEntity;
+import com.incdocs.utils.QueryManager;
+import com.incdocs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -134,8 +134,8 @@ public class UserDAO {
     public int createUserEntitlement(String incdocsID, String entityID) {
         return jdbcTemplate.update(queryManager.getSQL(INS_USER_ENTITLEMENTS),
                 new Object[]{
-                    incdocsID,
-                    entityID
+                        incdocsID,
+                        entityID
                 });
     }
 }
