@@ -138,4 +138,12 @@ public class UserDAO {
                         entityID
                 });
     }
+
+    public int deleteUserEntitlement(String userID, String entityID) {
+        return jdbcTemplate.update(queryManager.getSQL(DEL_USER_ENTITLEMENTS),
+                new Object[]{
+                        userID,
+                        entityID
+                });
+    }
 }

@@ -18,8 +18,10 @@ import net.sf.ehcache.search.Attribute;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +111,14 @@ public class UserManagementHelper {
     }
 
     public int createUserEntitlement(String userID, String entityID) {
-        User groupHead = getUserByEmpID(userID);
-        return userManagementDAO.createUserEntitlement(groupHead.getIncdocsID(), entityID);
+        return userManagementDAO.createUserEntitlement(userID, entityID);
+    }
+
+    @Transactional
+    public boolean deleteUserEntitlement(String userID, String entityID) throws ApplicationException {
+        int rows = userManagementDAO.deleteUserEntitlement(userID, entityID);
+        if (rows > 1)
+            throw new ApplicationException("no of rows deleted is not equal to 1", HttpStatus.BAD_REQUEST);
+        return true;
     }
 }

@@ -18,6 +18,10 @@ public class Entity {
 
     private String pan;
 
+    public Entity(String entityID) {
+        this.entityID = entityID;
+    }
+
     public String getPan() {
         return pan;
     }
@@ -25,10 +29,6 @@ public class Entity {
     public Entity setPan(String pan) {
         this.pan = pan;
         return this;
-    }
-
-    public Entity(String entityID) {
-        this.entityID = entityID;
     }
 
     public String getEntityID() {

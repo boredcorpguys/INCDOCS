@@ -25,6 +25,13 @@
                 ]]>
             </value>
         </entry>
+        <entry key="delete_user_entitlement">
+            <value><![CDATA[
+                    DELETE FROM "INCDOCS"."USER_ENTITLEMENTS"
+                    where "USER_ID"=? and "ENTITY_ID"=?
+                ]]>
+            </value>
+        </entry>
         <entry key="select_user">
             <value><![CDATA[
                     SELECT *

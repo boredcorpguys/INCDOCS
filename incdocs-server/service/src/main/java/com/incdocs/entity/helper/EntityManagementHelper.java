@@ -57,7 +57,7 @@ public class EntityManagementHelper {
     public List<Entity> getEntitiesByName(String name) {
         Attribute<String> idSearchAttr = appCacheManager.createSearchAttribute(CacheName.ENTITY,
                 CacheSearchAttributes.company_name);
-        String regex = "*"+name+"*";
+        String regex = "*" + name + "*";
         List<Entity> entities = appCacheManager.queryCacheValues(CacheName.ENTITY, idSearchAttr.ilike(regex));
         return entities;
     }

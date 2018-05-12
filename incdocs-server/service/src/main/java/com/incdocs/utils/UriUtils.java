@@ -1,5 +1,6 @@
 package com.incdocs.utils;
 
+import com.incdocs.model.response.Response;
 import org.springframework.http.HttpStatus;
 import sun.misc.BASE64Decoder;
 
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 
 public class UriUtils {
     public static final String excelContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -49,6 +52,13 @@ public class UriUtils {
         response.setContentType(excelContentType);
         response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
         response.setContentLength((int) file.length());
+    }
+
+    static public Response createResponse(List<Response.Metadata> metadataList, Map<String, String> data) {
+        Response response = new Response();
+        metadataList.forEach(response::addMetadata);
+        data.entrySet().forEach(entry -> response.addData(entry.getKey(), entry.getValue()));
+        return response;
     }
 
 }

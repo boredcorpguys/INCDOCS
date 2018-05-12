@@ -50,11 +50,11 @@ public class AdminService {
     public boolean createCompany(@RequestHeader(value = "incdocsID") String adminID,
                                  @RequestBody CreateCompanyRequest createCompanyRequest)
             throws ApplicationException {
-        int companyRowCount = entityManagementHelper.createCompany(adminID, createCompanyRequest);
-        int userEntitlementRowCount = userManagementHelper
+        entityManagementHelper.createCompany(adminID, createCompanyRequest);
+        userManagementHelper
                 .createUserEntitlement(createCompanyRequest.getGhID(),
                         createCompanyRequest.getId());
-        return (companyRowCount == 1 && userEntitlementRowCount == 1);
+        return true;
     }
 
     @PostMapping("/create/user")
