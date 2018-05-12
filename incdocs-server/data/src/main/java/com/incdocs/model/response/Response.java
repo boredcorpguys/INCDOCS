@@ -7,26 +7,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Response {
-    private List<Metadata> metadata = new ArrayList<>();
-    private Map<String, String> data = new HashMap<>();
+public class Response<T> {
+    private final List<Metadata> metadata = new ArrayList<>();
+    private final List<T> data = new ArrayList<>();
 
     public List<Metadata> getMetadata() {
         return metadata;
     }
 
-    public Map<String, String> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void addMetadata(Metadata m) {
+    public Response addMetadata(Metadata m) {
         if (m != null && StringUtils.isNotEmpty(m.colName) && StringUtils.isNotEmpty(m.colType))
             metadata.add(m);
+        return this;
     }
 
-    public void addData(String colName, String colValue) {
-        if (StringUtils.isNotEmpty(colName) && StringUtils.isNotEmpty(colValue))
-            data.put(colName, colValue);
+    public Response addDataRow(T row) {
+        data.add(row);
+        return this;
     }
 
     public static class Metadata {

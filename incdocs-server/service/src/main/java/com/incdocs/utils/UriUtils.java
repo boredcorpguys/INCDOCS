@@ -54,10 +54,10 @@ public class UriUtils {
         response.setContentLength((int) file.length());
     }
 
-    static public Response createResponse(List<Response.Metadata> metadataList, Map<String, String> data) {
+    static public <T> Response<T> createResponse(List<Response.Metadata> metadataList, List<T> data) {
         Response response = new Response();
         metadataList.forEach(response::addMetadata);
-        data.entrySet().forEach(entry -> response.addData(entry.getKey(), entry.getValue()));
+        data.forEach(response::addDataRow);
         return response;
     }
 

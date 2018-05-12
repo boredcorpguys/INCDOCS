@@ -6,8 +6,10 @@ import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.model.response.Response;
+import com.incdocs.model.response.SearchCompanyResponse;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
+import com.incdocs.utils.UriUtils;
 import com.incdocs.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,7 +55,7 @@ public class EntityManagementService {
      */
     @GetMapping("/search")
     public @ResponseBody
-    Response searchEntities(@RequestHeader(value = "incdocsID") String incdocsID,
+    Response<SearchCompanyResponse> searchEntities(@RequestHeader(value = "incdocsID") String incdocsID,
                             @RequestParam(value = "name", required = false) String name,
                             @RequestParam(value = "pan", required = false) String pan,
                             @RequestParam(value = "gh", required = false) String ghID) throws ApplicationException {
@@ -93,9 +97,23 @@ public class EntityManagementService {
                 .setColName("groupHeadId")
                 .setColType("string")
                 .setVisibility(false);
+        Response.Metadata metadata5 = new Response.Metadata()
+                .setColDisplayName("Company PAN#")
+                .setColName("pan")
+                .setColType("string")
+                .setVisibility(true);
 
-        entities.stream().map(entity -> userManagementHelper.getUserByEmpID(entity.getGroupHeadID()));
-
+        List<SearchCompanyResponse> rows = entities.stream().map(entity -> {
+            User groupHead = userManagementHelper.getUser(entity.getGroupHeadID());
+            String ghName = String.format("%s (%s)", groupHead.getName(), groupHead.getEmpID());
+            SearchCompanyResponse row = new SearchCompanyResponse();
+            row.setCompanyId(entity.getEntityID()).setCompanyName(entity.getName()).setPan(entity.getPan())
+                    .setGroupHeadId(groupHead.getEmpID()).setGroupHeadName(ghName);
+            return row;
+        }).collect(Collectors.toList());
+        Response<SearchCompanyResponse> response = UriUtils.createResponse(
+                Arrays.asList(metadata1, metadata2, metadata3, metadata4, metadata4), rows);
+        return response;
     }
 
 
