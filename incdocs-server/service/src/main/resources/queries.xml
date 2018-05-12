@@ -84,7 +84,7 @@
             <value>
                 <![CDATA[
                     with entities as (
-                        select e."ID", e."NAME", e."PARENT_ID"
+                        select e."ID", e."NAME", e."PARENT_ID", e."PAN"
                                         from "INCDOCS"."ENTITIES" e
                                         where "ID" = :id
                     ), group_head as (

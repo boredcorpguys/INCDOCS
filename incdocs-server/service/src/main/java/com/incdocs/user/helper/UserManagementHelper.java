@@ -14,6 +14,7 @@ import com.incdocs.model.request.CreateUserRequest;
 import com.incdocs.model.request.UserProfileRequest;
 import com.incdocs.user.dao.UserDAO;
 import com.incdocs.utils.ApplicationException;
+import com.incdocs.utils.Utils;
 import net.sf.ehcache.search.Attribute;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,14 +94,13 @@ public class UserManagementHelper {
         List<Entity> entities = new ArrayList<>();
         User user = getUser(incdocsID);
         Role role = entitlementManagementHelper.getRole(user.getRoleID());
+        ApplicationConstants.Roles roleConstant = ApplicationConstants.Roles.valueOf(role.getRoleName());
         String whichUser = incdocsID;
-        if (ApplicationConstants.Roles.valueOf(role.getRoleName())
-                != ApplicationConstants.Roles.GROUP_HEAD
-                && ApplicationConstants.Roles.valueOf(role.getRoleName())
-                != ApplicationConstants.Roles.ADMIN
+        if (roleConstant != ApplicationConstants.Roles.GROUP_HEAD
+                && roleConstant != ApplicationConstants.Roles.ADMIN
                 && !selfEntitled) {
             // get gh entitled companies
-            whichUser = user.getManagerID();
+            whichUser = Utils.idGenerator(user.getCompanyID(), user.getManagerID());
         }
         UserEntitlement userEntitlement = getUserEntitlements(whichUser);
         if (userEntitlement != null && !CollectionUtils.isEmpty(userEntitlement.getEntities())) {
