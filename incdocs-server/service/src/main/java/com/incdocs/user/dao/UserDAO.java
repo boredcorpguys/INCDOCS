@@ -146,4 +146,11 @@ public class UserDAO {
                         entityID
                 });
     }
+
+    public List<User> getARMforRM(String incdocsID) {
+        SqlParameterSource params = new MapSqlParameterSource("id", incdocsID);
+        return new NamedParameterJdbcTemplate(jdbcTemplate).query(queryManager.getSQL(SEL_ARM_LIST),
+                params,
+                userRowMapper);
+    }
 }

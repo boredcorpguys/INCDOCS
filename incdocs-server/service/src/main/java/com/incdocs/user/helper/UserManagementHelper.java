@@ -121,4 +121,8 @@ public class UserManagementHelper {
             throw new ApplicationException("no of rows deleted is not equal to 1", HttpStatus.BAD_REQUEST);
         return true;
     }
+
+    public List<User> getSubordinates(String incdocsID) {
+        return userManagementDAO.getARMforRM(incdocsID);
+    }
 }

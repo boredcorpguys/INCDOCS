@@ -1,13 +1,21 @@
 package com.incdocs.user.services;
 
+import com.incdocs.model.domain.User;
 import com.incdocs.model.response.Response;
+import com.incdocs.model.response.SearchCompanyResponse;
+import com.incdocs.model.response.SearchSubordinateResponse;
 import com.incdocs.user.helper.ManagerActionsManagementHelper;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
+import com.incdocs.utils.UriUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController("managerActionService")
 @RequestMapping("/incdocs/manager")
@@ -38,5 +46,30 @@ public class ManagerActionService {
                                              @RequestParam(value = "companyId", required = false) String companyID) throws ApplicationException {
         userManagementHelper.createUserEntitlement(memberID, companyID);
         return true;
+    }
+
+    @GetMapping("/search/subordinates")
+    public @ResponseBody
+    Response<SearchSubordinateResponse> searchEntities(@RequestHeader(value = "incdocsID") String incdocsID) {
+        List<User> armList = userManagementHelper.getSubordinates(incdocsID);
+        Response.Metadata metadata1 = new Response.Metadata()
+                .setColDisplayName("ARM Name")
+                .setColName("name")
+                .setColType("string")
+                .setVisibility(true);
+
+        Response.Metadata metadata2 = new Response.Metadata()
+                .setColDisplayName("ARM ID")
+                .setColName("empID")
+                .setColType("string")
+                .setVisibility(true);
+
+        List<SearchSubordinateResponse> rows = armList.stream()
+                .map(user -> new SearchSubordinateResponse().setName(user.getName()).setEmpID(user.getEmpID()))
+                .collect(Collectors.toList());
+        Response<SearchSubordinateResponse> response = UriUtils.createResponse(
+                Arrays.asList(metadata1, metadata2), rows);
+
+        return response;
     }
 }

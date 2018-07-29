@@ -224,6 +224,18 @@
                 ]]>
             </value>
         </entry>
+        <entry key="select_arm_list">
+            <value>
+                with RM as (select *
+                from "INCDOCS"."USERS" u
+                where u."INCDOCS_ID"=:id)
+                select *
+                from "INCDOCS"."USERS" u
+                inner join "INCDOCS"."ROLES" r on u."ROLE_ID" = r."ID"
+                inner join RM rm on u."MANAGER_ID"=rm."MANAGER_ID"
+                where r."NAME"='ARM'
+            </value>
+        </entry>
     </util:map>
 
 </beans>

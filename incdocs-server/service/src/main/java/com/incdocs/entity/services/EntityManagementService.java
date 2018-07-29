@@ -112,7 +112,7 @@ public class EntityManagementService {
             return row;
         }).collect(Collectors.toList());
         Response<SearchCompanyResponse> response = UriUtils.createResponse(
-                Arrays.asList(metadata1, metadata2, metadata3, metadata4, metadata4), rows);
+                Arrays.asList(metadata1, metadata2, metadata3, metadata4, metadata4, metadata5), rows);
         return response;
     }
 

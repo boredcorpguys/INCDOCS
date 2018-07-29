@@ -32,6 +32,7 @@ public class QueryManager implements InitializingBean {
         INSERT_USER("insert_user"),
         INS_USER_ENTITLEMENTS("insert_user_entitlement"),
         DEL_USER_ENTITLEMENTS("delete_user_entitlement"),
+        SEL_ARM_LIST("select_arm_list"),
 
         SEL_ROLE("select_role"),
         SEL_ALL_ROLES("select_all_roles"),
