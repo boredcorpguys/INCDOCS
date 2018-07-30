@@ -56,8 +56,8 @@ public class BulkUploadUserRow implements Comparable<BulkUploadUserRow> {
 
     @Override
     public int compareTo(BulkUploadUserRow o) {
-        Integer thisRolePriority = ApplicationConstants.Roles.valueOf(this.getRole()).getPriority();
-        Integer thatRolePriority = ApplicationConstants.Roles.valueOf(o.getRole()).getPriority();
+        Integer thisRolePriority = ApplicationConstants.Role.valueOf(this.getRole()).getId();
+        Integer thatRolePriority = ApplicationConstants.Role.valueOf(o.getRole()).getId();
         return thisRolePriority.compareTo(thatRolePriority);
     }
 }

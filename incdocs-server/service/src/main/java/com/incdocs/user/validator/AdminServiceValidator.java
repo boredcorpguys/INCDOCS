@@ -2,13 +2,11 @@ package com.incdocs.user.validator;
 
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.helper.EntityManagementHelper;
-import com.incdocs.model.constants.ApplicationConstants;
+import com.incdocs.model.constants.ApplicationConstants.Role;
 import com.incdocs.model.domain.Entity;
-import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.model.request.CreateUserRequest;
-import com.incdocs.model.response.RoleActions;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
 import com.incdocs.utils.Utils;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.incdocs.utils.Utils.validate;
+import static com.incdocs.utils.Utils.validateRole;
 
 @Aspect
 @Component
@@ -48,12 +47,7 @@ public class AdminServiceValidator {
     public void validateAdmin(JoinPoint joinPoint) throws ApplicationException {
         String incdocsID = (String) joinPoint.getArgs()[0];
         User admin = userManagementHelper.getUser(incdocsID);
-        RoleActions roleActions = entitlementHelper.getActionsForRole(admin.getRoleID());
-        if (roleActions == null || !roleActions.getRole().getRoleName()
-                .equals(ApplicationConstants.Roles.ADMIN.name())) {
-            throw new ApplicationException(String.format("%s is not authorized to make this request", incdocsID),
-                    HttpStatus.UNAUTHORIZED);
-        }
+        validateRole(admin, Role.ADMIN);
     }
 
     @Before("execution(* com.incdocs.user.services.AdminService.createUser(..))")
@@ -68,8 +62,8 @@ public class AdminServiceValidator {
 
         // validate the role passed is a system defined role
         User admin = userManagementHelper.getUser(incdocsID);
-        List<Role> entityRoles = entityManagementHelper.getEntityRoles(admin.getCompanyID());
-        Role role = entityRoles.stream()
+        List<com.incdocs.model.domain.Role> entityRoles = entityManagementHelper.getEntityRoles(admin.getCompanyID());
+        com.incdocs.model.domain.Role role = entityRoles.stream()
                 .filter(r -> r.getRoleID() == userCreateRequest.getRoleID())
                 .findFirst().orElse(null);
         validate(role, String.format("%s is invalid role", userCreateRequest.getRoleID())
@@ -84,7 +78,7 @@ public class AdminServiceValidator {
         }
 
         // check if role is group head
-        if (ApplicationConstants.Roles.valueOf(role.getRoleName()) != ApplicationConstants.Roles.GROUP_HEAD) {
+        if (Role.valueOf(role.getRoleName()) != Role.GROUP_HEAD) {
             validate(userCreateRequest.getGhID(), "ghID");
             String ghIncdocsID = Utils.idGenerator(admin.getCompanyID(), userCreateRequest.getGhID());
             User groupHead = userManagementHelper.getUser(ghIncdocsID);

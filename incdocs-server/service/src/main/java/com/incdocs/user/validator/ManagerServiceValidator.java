@@ -3,9 +3,9 @@ package com.incdocs.user.validator;
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.helper.EntityManagementHelper;
 import com.incdocs.model.domain.Entity;
-import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.domain.UserEntitlement;
+import com.incdocs.model.response.RoleActions;
 import com.incdocs.user.helper.UserManagementHelper;
 import com.incdocs.utils.ApplicationException;
 import com.incdocs.utils.Utils;
@@ -20,8 +20,9 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.incdocs.model.constants.ApplicationConstants.Roles;
-import static com.incdocs.utils.Utils.validate;
+import static com.incdocs.model.constants.ApplicationConstants.Action.VIEW_SUBORDINATES;
+import static com.incdocs.model.constants.ApplicationConstants.Role;
+import static com.incdocs.utils.Utils.*;
 
 
 @Aspect
@@ -37,14 +38,21 @@ public class ManagerServiceValidator {
     @Autowired
     private EntityManagementHelper entityManagementHelper;
 
+    @Before("execution(* com.incdocs.user.services.ManagerActionService.*(..))")
+    public void validateManager(JoinPoint joinPoint) throws ApplicationException {
+        String incdocsID = (String) joinPoint.getArgs()[0];
+        User manager = userManagementHelper.getUser(incdocsID);
+        validateRole(manager, Role.RM);
+    }
+
     public void validateModifyMemberMapping(String incdocsID, String memberID, String entityID)
             throws ApplicationException {
         validate(memberID, "memberId");
         validate(entityID, "entityId");
         User manager = userManagementHelper.getUser(incdocsID);
-        Role role = entitlementHelper.getRole(manager.getRoleID());
-        List<Roles> validRoles = Arrays.asList(Roles.GROUP_HEAD, Roles.RM);
-        if (!validRoles.contains(Roles.valueOf(role.getRoleName()))) {
+        com.incdocs.model.domain.Role role = entitlementHelper.getRole(manager.getRoleID());
+        List<Role> validRoles = Arrays.asList(Role.GROUP_HEAD, Role.RM);
+        if (!validRoles.contains(Role.valueOf(role.getRoleName()))) {
             throw new ApplicationException(String.format("%s is not authorized to make this request", incdocsID),
                     HttpStatus.UNAUTHORIZED);
         }
@@ -83,7 +91,6 @@ public class ManagerServiceValidator {
                     HttpStatus.BAD_REQUEST);
         }
 
-
     }
 
     public void validateAddMemberToCompanyMapping(JoinPoint joinPoint) throws ApplicationException {
@@ -100,5 +107,13 @@ public class ManagerServiceValidator {
                     memberID),
                     HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Before("execution(* com.incdocs.user.services.ManagerActionService.searchSubordindates(..))")
+    public void validateSearchSubordindates(JoinPoint joinPoint) throws ApplicationException {
+        String incdocsID = (String) joinPoint.getArgs()[0];
+        User rm = userManagementHelper.getUser(incdocsID);
+        RoleActions roleActions = entitlementHelper.getActionsForRole(rm.getRoleID());
+        validateRoleActions(VIEW_SUBORDINATES, roleActions);
     }
 }

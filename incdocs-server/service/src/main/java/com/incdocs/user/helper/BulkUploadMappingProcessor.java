@@ -3,7 +3,6 @@ package com.incdocs.user.helper;
 import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.BulkUploadUserRow;
-import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.request.CreateCompanyRequest;
 import com.incdocs.model.request.CreateUserRequest;
@@ -58,7 +57,7 @@ public class BulkUploadMappingProcessor {
 
         List<BulkUploadUserRow> errorRows = new ArrayList<>();
 
-        Role ghRole = entitlementManagementHelper.getRole(ApplicationConstants.Roles.GROUP_HEAD);
+        com.incdocs.model.domain.Role ghRole = entitlementManagementHelper.getRole(ApplicationConstants.Role.GROUP_HEAD);
 
         List<BulkUploadUserRow> ghRows = new ArrayList<>();
         List<BulkUploadUserRow> nonGhRows = new ArrayList<>();
@@ -74,17 +73,17 @@ public class BulkUploadMappingProcessor {
         User admin = userManagementHelper.getUser(adminID);
         ghRows.forEach(createUserConsumer(admin, errorRows, ghRole));
         nonGhRows.forEach(row -> {
-            Role currRole = entitlementManagementHelper.getRole(ApplicationConstants.Roles.valueOf(row.getRole()));
+            com.incdocs.model.domain.Role currRole = entitlementManagementHelper.getRole(ApplicationConstants.Role.valueOf(row.getRole()));
             createUserConsumer(admin, errorRows, currRole).accept(row);
         });
 
         return errorRows;
     }
 
-    private Predicate<BulkUploadUserRow> checkGHPredicate(Role ghRole) {
+    private Predicate<BulkUploadUserRow> checkGHPredicate(com.incdocs.model.domain.Role ghRole) {
         return row -> {
             try {
-                Role currRole = entitlementManagementHelper.getRole(ApplicationConstants.Roles.valueOf(row.getRole()));
+                com.incdocs.model.domain.Role currRole = entitlementManagementHelper.getRole(ApplicationConstants.Role.valueOf(row.getRole()));
                 return currRole.getRoleID() == ghRole.getRoleID();
             } catch (Exception e) {
                 return false;
@@ -92,7 +91,7 @@ public class BulkUploadMappingProcessor {
         };
     }
 
-    private Consumer<BulkUploadUserRow> createUserConsumer(User admin, List<BulkUploadUserRow> errorRows, Role role) {
+    private Consumer<BulkUploadUserRow> createUserConsumer(User admin, List<BulkUploadUserRow> errorRows, com.incdocs.model.domain.Role role) {
         return rowToInsert -> {
             CreateUserRequest createUserRequest = new CreateUserRequest()
                     .setRoleID(role.getRoleID())

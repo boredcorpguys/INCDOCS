@@ -41,26 +41,30 @@ public class ApplicationConstants {
         }
     }
 
-    public enum Roles {
-        ADMIN(null),
-        GROUP_HEAD(1),
-        RM(2),
-        ARM(3),
-        CMO(null),
-        REQUESTOR(null),
-        APPROVER(null),
-        AUTH_SIGNATORY(null),
-        CS(null);
+    public enum Role {
+        ADMIN(1),
+        GROUP_HEAD(2),
+        RM(3),
+        ARM(4),
+        CMO(5),
+        REQUESTOR(6),
+        APPROVER(7),
+        AUTH_SIGNATORY(8),
+        CS(9);
 
-        private Integer priority = Integer.MAX_VALUE;
+        private Integer id = Integer.MAX_VALUE;
 
-        Roles(Integer priority) {
-            if (priority != null)
-                this.priority = priority;
+        Role(Integer id) {
+            if (id != null)
+                this.id = id;
         }
 
-        public Integer getPriority() {
-            return priority;
+        public Integer getId() {
+            return id;
+        }
+
+        public static Role fromValue(int id) {
+            return Arrays.stream(values()).filter(role -> role.id == id).findFirst().orElse(null);
         }
     }
 
@@ -97,5 +101,23 @@ public class ApplicationConstants {
         Name,
         CompanyID,
         Pan
+    }
+
+    public enum Action {
+        CREATE_USER,
+        CREATE_COMPANY,
+        BULK_UPLOAD_MAPPINGS,
+        VIEW_ANALYTICS,
+        VIEW_STOCK_STATEMENT,
+        APPROVE_STOCK_STATEMENT,
+        REJECT_STOCK_STATEMENT,
+        APPROVE_RM_REQUEST,
+        VIEW_PORTFOLIO,
+        PROMOTE_USER,
+        MANAGE_PORTFOLIO,
+        REQUEST_COMPANY,
+        CHANGE_GH,
+        VIEW_ROLES,
+        VIEW_SUBORDINATES;
     }
 }

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,9 +55,9 @@ public class EntityManagementService {
     @GetMapping("/search")
     public @ResponseBody
     Response<SearchCompanyResponse> searchEntities(@RequestHeader(value = "incdocsID") String incdocsID,
-                            @RequestParam(value = "name", required = false) String name,
-                            @RequestParam(value = "pan", required = false) String pan,
-                            @RequestParam(value = "gh", required = false) String ghID) throws ApplicationException {
+                                                   @RequestParam(value = "name", required = false) String name,
+                                                   @RequestParam(value = "pan", required = false) String pan,
+                                                   @RequestParam(value = "gh", required = false) String ghID) throws ApplicationException {
         List<Entity> entities = new ArrayList<>();
         if (StringUtils.isNotEmpty(name))
             entities.addAll(entityManagementHelper.getEntitiesByName(name));
@@ -115,7 +114,6 @@ public class EntityManagementService {
                 Arrays.asList(metadata1, metadata2, metadata3, metadata4, metadata4, metadata5), rows);
         return response;
     }
-
 
 
     /**

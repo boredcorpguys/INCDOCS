@@ -2,7 +2,6 @@ package com.incdocs.user.services;
 
 import com.incdocs.model.domain.User;
 import com.incdocs.model.response.Response;
-import com.incdocs.model.response.SearchCompanyResponse;
 import com.incdocs.model.response.SearchSubordinateResponse;
 import com.incdocs.user.helper.ManagerActionsManagementHelper;
 import com.incdocs.user.helper.UserManagementHelper;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +48,7 @@ public class ManagerActionService {
 
     @GetMapping("/search/subordinates")
     public @ResponseBody
-    Response<SearchSubordinateResponse> searchEntities(@RequestHeader(value = "incdocsID") String incdocsID) {
+    Response<SearchSubordinateResponse> searchSubordindates(@RequestHeader(value = "incdocsID") String incdocsID) {
         List<User> armList = userManagementHelper.getSubordinates(incdocsID);
         Response.Metadata metadata1 = new Response.Metadata()
                 .setColDisplayName("ARM Name")

@@ -7,7 +7,6 @@ import com.incdocs.entitlement.helper.EntitlementManagementHelper;
 import com.incdocs.entity.helper.EntityManagementHelper;
 import com.incdocs.model.constants.ApplicationConstants;
 import com.incdocs.model.domain.Entity;
-import com.incdocs.model.domain.Role;
 import com.incdocs.model.domain.User;
 import com.incdocs.model.domain.UserEntitlement;
 import com.incdocs.model.request.CreateUserRequest;
@@ -93,11 +92,11 @@ public class UserManagementHelper {
     public List<Entity> getEntitledEntities(String incdocsID, boolean selfEntitled) {
         List<Entity> entities = new ArrayList<>();
         User user = getUser(incdocsID);
-        Role role = entitlementManagementHelper.getRole(user.getRoleID());
-        ApplicationConstants.Roles roleConstant = ApplicationConstants.Roles.valueOf(role.getRoleName());
+        com.incdocs.model.domain.Role role = entitlementManagementHelper.getRole(user.getRoleID());
+        ApplicationConstants.Role roleConstant = ApplicationConstants.Role.valueOf(role.getRoleName());
         String whichUser = incdocsID;
-        if (roleConstant != ApplicationConstants.Roles.GROUP_HEAD
-                && roleConstant != ApplicationConstants.Roles.ADMIN
+        if (roleConstant != ApplicationConstants.Role.GROUP_HEAD
+                && roleConstant != ApplicationConstants.Role.ADMIN
                 && !selfEntitled) {
             // get gh entitled companies
             whichUser = Utils.idGenerator(user.getCompanyID(), user.getManagerID());
