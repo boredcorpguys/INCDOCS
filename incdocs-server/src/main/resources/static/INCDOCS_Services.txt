@@ -1,0 +1,72 @@
+1. Entitlements: (/incdocs/role)
+    a. /actions :
+		- gets all the actions for the role of the user
+      
+    b. /all:
+		- gets all the bank or client side roles based on where the logged in user belongs to.
+                    			
+2. Entity: (/incdocs/company)
+	a. /detail:
+		- gets the details of the company of the logged in user
+			
+	b. /roles:
+		- gets the set of roles enabled for a company
+			
+	c. /search:
+		- default:
+			gives a list of companies mapped to the RM's Group Head.
+		- ?name=Tata
+			gives all companies having Tata in their names
+		- ?pan=ABCD123456
+			search by pan
+		- ?gh=vishnubot
+			search companies for another gh
+		
+3. User: (/incdocs/user)
+	a. /login:
+		user login service.
+			
+			
+	b. /companies:
+		- default 
+			gives the companies belonging to the users group head
+		
+		- ?self=true
+			gives companies entitled to self
+			
+	c. /profile/modify
+		- allows user to change:
+			{
+				"id":"c663e540-1a15-11e8-9aa8-d77b932ecf07",
+				"emailID":"kkolhar@gmail.com",
+				"contactNumber";"9999888800"
+			}
+			
+4. Admin: (/incdocs/admin)
+	a. /create/company 
+		- creates a company with a GH
+	
+	b. /create/user
+		- creates a user with a GH
+		
+	c. /bulk/user/download
+		- downloads the bulkupload user mapping excel
+	
+	d. /bulk/user/upload
+		- uploads the mapping excel
+	
+	e. /bulk/company/download
+		- downloads the bulk company upload excel.
+		
+	f. /bulk/company/upload
+		- uploads the bulk company upload excel.
+		
+5. Manager: (/incdocs/manager)
+	a. /portfolio/details
+		- portfolio details for a RM/ ARM
+		
+	b. /membermapping/delete
+		- RM deleting a company: ARM mapping
+	
+	c. /membermapping/add
+		- RM adding a company: ARM mapping
